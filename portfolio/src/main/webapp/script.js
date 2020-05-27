@@ -12,17 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+const SPOTIFY_LINK = "https://open.spotify.com/playlist/6rmiBWfdA4jGdTWaYMAQri";
+
+
 /**
- * Adds a random greeting to the page.
+ * Sends user a spotify link
  */
-function addRandomGreeting() {
-  const greetings =
-      ['Hello world!', '¡Hola Mundo!', '你好，世界！', 'Bonjour le monde!'];
-
-  // Pick a random greeting.
-  const greeting = greetings[Math.floor(Math.random() * greetings.length)];
-
-  // Add it to the page.
-  const greetingContainer = document.getElementById('greeting-container');
-  greetingContainer.innerText = greeting;
+function sendSpotifyLink(){
+    const linkContainer = document.getElementById("spotify-link-container");
+    linkContainer.innerHTML = "<em>Jazz isn't an avenue I've explored!</em> Here is the spotify link: \n" + SPOTIFY_LINK;
 }
