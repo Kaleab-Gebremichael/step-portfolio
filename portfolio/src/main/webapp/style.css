@@ -4,6 +4,14 @@
   width: 650px;
 }
 
-#greeting-container {
-  margin-top: 20px;
+.photo {
+    max-height: 50%;
+    max-width: 50%;
+    display: block;
+}
+
+.navbar {
+    position: fixed;
+    top: 0;
+    margin-bottom: 50px;
 }
