@@ -7,11 +7,29 @@
 .photo {
     max-height: 50%;
     max-width: 50%;
-    display: block;
+    display: inline-block;
+    margin: auto;
 }
 
 .navbar {
     position: fixed;
+    margin: auto;
+    display: inline-block;
     top: 0;
-    margin-bottom: 50px;
+    overflow: hidden;
+    width: inherit;
+    background-color: grey;
+}
+
+.navbar a:hover {
+  background: #ddd;
+  color: black;
+}
+
+.headers{
+    margin-left: 75px;
+}
+
+body{
+    color: #40514E;
 }
