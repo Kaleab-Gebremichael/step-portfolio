@@ -22,3 +22,19 @@ function sendSpotifyLink(){
     const linkContainer = document.getElementById("spotify-link-container");
     linkContainer.innerHTML = "<em>Jazz isn't an avenue I've explored!</em> Here is the spotify link: \n" + SPOTIFY_LINK;
 }
+
+
+/**
+ * Adds a random greeting to the page.
+ */
+function addRandomMovie() {
+  const movies =
+      ['Austin Powers', 'Ace Ventura', 'Talladega Nights', 'The dictator'];
+
+  // Pick a random greeting.
+  const movie = movies[Math.floor(Math.random() * movies.length)];
+
+  // Add it to the page.
+  const movieContainer = document.getElementById('movie-container');
+  movieContainer.innerText = movie;
+}
