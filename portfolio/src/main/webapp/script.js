@@ -15,19 +15,12 @@
 const SPOTIFY_LINK = "https://open.spotify.com/playlist/6rmiBWfdA4jGdTWaYMAQri";
 
 
-
-/* Sends user a spotify link.*/
-function sendSpotifyLink(){
-    const scoreContainer = document.getElementById("score-container");
-    scoreContainer.innerHTML = "<em>Jazz isn't an avenue I've explored!</em> Here is the spotify link: \n" + SPOTIFY_LINK;
-}
-
-
 let clickedItems = [];
 let rightAnswers = ["choice-2", "choice-2", "choice-1"];
 let currentQuestionNumber = 0;
 
 document.getElementById("quiz").addEventListener("click", function(event){
+    document.getElementById("quiz").reset();
     if(currentQuestionNumber != questionList.length){
         clickedItems.push(event.srcElement.id);
         generateNextQuestion(currentQuestionNumber++);
