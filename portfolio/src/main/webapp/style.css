@@ -21,6 +21,10 @@
     background-color: grey;
 }
 
+.hidden {
+    display: none;
+}
+
 .navbar a:hover {
   background: #ddd;
   color: black;

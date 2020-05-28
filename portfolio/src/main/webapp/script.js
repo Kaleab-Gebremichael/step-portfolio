@@ -18,26 +18,25 @@ const SPOTIFY_LINK = "https://open.spotify.com/playlist/6rmiBWfdA4jGdTWaYMAQri";
 
 /* Sends user a spotify link.*/
 function sendSpotifyLink(){
-    const linkContainer = document.getElementById("spotify-link-container");
-    linkContainer.innerHTML = "<em>Jazz isn't an avenue I've explored!</em> Here is the spotify link: \n" + SPOTIFY_LINK;
+    const scoreContainer = document.getElementById("score-container");
+    scoreContainer.innerHTML = "<em>Jazz isn't an avenue I've explored!</em> Here is the spotify link: \n" + SPOTIFY_LINK;
 }
 
-// document.getElementById("quiz").addEventListener("submit", function(event) {
-//   const data = new FormData(form);
-//   let output = "";
-//   for (const entry of data) {
-//     output = output + entry[0] + "=" + entry[1] + "\r";
-//   }
-
-//   console.log(output);
-// });
 
 let clickedItems = [];
+let rightAnswers = ["choice-2", "choice-2", "choice-1"];
 let currentQuestionNumber = 0;
 
 document.getElementById("quiz").addEventListener("click", function(event){
-    clickedItems.push(event.srcElement.id);
-    generateNextQuestion(currentQuestionNumber++);
+    if(currentQuestionNumber != questionList.length){
+        clickedItems.push(event.srcElement.id);
+        generateNextQuestion(currentQuestionNumber++);
+    } else {
+        document.getElementById("quiz").classList.add("hidden");
+
+        const scoreContainer = document.getElementById("score-container");
+        scoreContainer.innerHTML = "Please click Finish to calculate your score";
+    }
 
 });
 
@@ -56,16 +55,30 @@ let question3 = {
 const questionList = [question2,question3];
 
 function generateNextQuestion(questionNumber){
-    if(questionNumber != questionList.length){
-        document.getElementsByClassName("question")[0].innerText = questionList[questionNumber].question;
-        document.getElementsByClassName("choice-1")[0].innerText = questionList[questionNumber].choice1;
-        document.getElementsByClassName("choice-2")[0].innerText = questionList[questionNumber].choice2;
-    
-    } else {
-        calculateScore();
+    document.getElementsByClassName("question")[0].innerText = questionList[questionNumber].question;
+    document.getElementsByClassName("choice-1")[0].innerText = questionList[questionNumber].choice1;
+    document.getElementsByClassName("choice-2")[0].innerText = questionList[questionNumber].choice2;
+}
+
+document.getElementById("button").addEventListener("click",function(){
+    document.getElementById("button").classList.add("hidden");
+    let score = 0;
+    for(let i = 0; i < rightAnswers.length; ++i){
+        if(clickedItems[i] == rightAnswers[i]){
+            ++score;
+        }
     }
 
-}
+    const scoreContainer = document.getElementById("score-container");
+    if(score > questionList.length/2){
+        scoreContainer.innerHTML = "Your score is " + score + 
+            "! Here is the spotify link for you to enjoy: \n" + SPOTIFY_LINK;
+    } else {
+        scoreContainer.innerHTML = "Your score is " + score;
+    }
+    
+
+});
 
 /**
  * Adds a random greeting to the page.
