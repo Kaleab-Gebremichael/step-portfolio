@@ -30,7 +30,11 @@
   color: black;
 }
 
-.headers{
+h3{
+    margin-left: 75px;
+}
+
+h1{
     margin-left: 75px;
 }
 
