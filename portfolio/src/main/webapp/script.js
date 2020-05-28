@@ -33,6 +33,8 @@ const QUESTION_3 = {
 
 const QUESTIONS_LIST = [QUESTION_2,QUESTION_3];
 
+const QUIZ = document.getElementById("quiz");
+
 let clickedItems = [];
 let currentQuestionNumber = 0;
 
@@ -40,15 +42,15 @@ let currentQuestionNumber = 0;
  *  This function records the choices of the user and makes call to next 
  *  question generator if appropriate. 
 */
-document.getElementById("quiz").addEventListener("click", function(event){
-    document.getElementById("quiz").reset();
+QUIZ.addEventListener("click", function(event){
+    QUIZ.reset();
 
     if(currentQuestionNumber != QUESTIONS_LIST.length){
         clickedItems.push(event.srcElement.id);
         generateNextQuestion(currentQuestionNumber++);
     
     } else {
-        document.getElementById("quiz").classList.add("hidden");
+        QUIZ.classList.add("hidden");
 
         const scoreContainer = document.getElementById("score-container");
         scoreContainer.innerHTML = "Please click Finish to calculate your score";
@@ -57,19 +59,19 @@ document.getElementById("quiz").addEventListener("click", function(event){
 
 
 /**
-    This function displays the next question available.
-    @type {number} questionNumber - the question to display
+ *   This function displays the next question available.
+ *   @param {number} questionNumber  The question to display
  */
-function generateNextQuestiongit(questionNumber){
-    document.getElementsByClassName("question")[0].innerText = QUESTIONS_LIST[questionNumber].question;
-    document.getElementsByClassName("choice-1")[0].innerText = QUESTIONS_LIST[questionNumber].choice1;
-    document.getElementsByClassName("choice-2")[0].innerText = QUESTIONS_LIST[questionNumber].choice2;
+function generateNextQuestion(questionNumber){
+    document.getElementById("question").innerText = QUESTIONS_LIST[questionNumber].question;
+    document.getElementById("choice_1").innerText = QUESTIONS_LIST[questionNumber].choice1;
+    document.getElementById("choice_2").innerText = QUESTIONS_LIST[questionNumber].choice2;
 }
 
 
 /** This function calculates and displays the results from the quiz. */
-document.getElementById("button").addEventListener("click",function(){
-    document.getElementById("button").classList.add("hidden");
+document.getElementById("finish-button").addEventListener("click", () => {
+    document.getElementById("finish-button").classList.add("hidden");
     
     let score = 0;
     for(let i = 0; i < RIGHT_ANSWERS.length; ++i){
@@ -80,9 +82,10 @@ document.getElementById("button").addEventListener("click",function(){
 
     const scoreContainer = document.getElementById("score-container");
     
-    if(score > QUESTIONS_LIST.length/2){
-        scoreContainer.innerHTML = "Your score is " + score + 
-            "! Here is the spotify link for you to enjoy: \n" + SPOTIFY_LINK;
+    if(score > QUESTIONS_LIST.length / 2){
+        scoreContainer.innerHTML = `Your score is ${score}! Here is a spotify link for you to enjoy:
+            ${SPOTIFY_LINK}`;
+    
     } else {
         scoreContainer.innerHTML = "Your score is " + score;
     }
@@ -92,7 +95,7 @@ document.getElementById("button").addEventListener("click",function(){
 /** Adds a random greeting to the page. */
 function addRandomMovie() {
   // Pick a random greeting.
-  const movie = movies[Math.floor(Math.random() * movies.length)];
+  const movie = MOVIES[Math.floor(Math.random() * MOVIES.length)];
 
   // Add it to the page.
   const movieContainer = document.getElementById('movie-container');
