@@ -33,10 +33,11 @@ function sendSpotifyLink(){
 // });
 
 let clickedItems = [];
+let currentQuestionNumber = 0;
 
 document.getElementById("quiz").addEventListener("click", function(event){
     clickedItems.push(event.srcElement.id);
-    generateNextQuestion();
+    generateNextQuestion(currentQuestionNumber++);
 
 });
 
@@ -46,8 +47,23 @@ let question2 = {
     choice2: "Liverpool"
 }
 
-function generateNextQuestion(){
-    document.getElementsByClassName("question")[0].innerText = question2.question;
+let question3 = {
+    question: "Which of the following apps don't I have on my phone?",
+    choice1: "Tiktok",
+    choice2: "Reddit"
+}
+
+const questionList = [question2,question3];
+
+function generateNextQuestion(questionNumber){
+    if(questionNumber != questionList.length){
+        document.getElementsByClassName("question")[0].innerText = questionList[questionNumber].question;
+        document.getElementsByClassName("choice-1")[0].innerText = questionList[questionNumber].choice1;
+        document.getElementsByClassName("choice-2")[0].innerText = questionList[questionNumber].choice2;
+    
+    } else {
+        calculateScore();
+    }
 
 }
 
