@@ -60,7 +60,7 @@ document.getElementById("quiz").addEventListener("click", function(event){
     This function displays the next question available.
     @type {number} questionNumber - the question to display
  */
-function generateNextQuestion(questionNumber){
+function generateNextQuestiongit(questionNumber){
     document.getElementsByClassName("question")[0].innerText = QUESTIONS_LIST[questionNumber].question;
     document.getElementsByClassName("choice-1")[0].innerText = QUESTIONS_LIST[questionNumber].choice1;
     document.getElementsByClassName("choice-2")[0].innerText = QUESTIONS_LIST[questionNumber].choice2;
