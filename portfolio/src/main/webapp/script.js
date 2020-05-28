@@ -53,8 +53,8 @@ document.getElementById("quiz").addEventListener("click", function(event){
         const scoreContainer = document.getElementById("score-container");
         scoreContainer.innerHTML = "Please click Finish to calculate your score";
     }
-
 });
+
 
 /**
     This function displays the next question available.
@@ -65,6 +65,7 @@ function generateNextQuestion(questionNumber){
     document.getElementsByClassName("choice-1")[0].innerText = QUESTIONS_LIST[questionNumber].choice1;
     document.getElementsByClassName("choice-2")[0].innerText = QUESTIONS_LIST[questionNumber].choice2;
 }
+
 
 /** This function calculates and displays the results from the quiz. */
 document.getElementById("button").addEventListener("click",function(){
@@ -78,14 +79,13 @@ document.getElementById("button").addEventListener("click",function(){
     }
 
     const scoreContainer = document.getElementById("score-container");
+    
     if(score > QUESTIONS_LIST.length/2){
         scoreContainer.innerHTML = "Your score is " + score + 
             "! Here is the spotify link for you to enjoy: \n" + SPOTIFY_LINK;
     } else {
         scoreContainer.innerHTML = "Your score is " + score;
     }
-    
-
 });
 
 
