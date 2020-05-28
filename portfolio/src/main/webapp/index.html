@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>Portfolio Page</title>
     <link rel="stylesheet" href="style.css">
-    <script src="script.js"></script>
   </head>
   <body>
     
@@ -69,19 +68,29 @@
       <button onclick="addRandomMovie()">Get</button>
       <div id="movie-container"></div>
 
-      <p> So what do I do when I'm not waiting for the last Austin Powers to come out? I listen to music. Which one of these genres do you think I don't listen to? If you answer right, you'll get a link to my spotify playlist.</p>
+      <p> So what do I do when I'm not waiting for the last Austin Powers to come out? I listen to music. Take this short quiz below to get a chance to earn a prize!</p>
+          
       
-      <form>
-          <input type="radio" id="grunge">
-          <label for="grunge">Grunge Metal</label>
+      <form id="quiz">
+          <div >
+            <p class="question"> Which one of these genres do you think I don't listen to? </p>
 
-          <input type="radio" id="jazz">
-          <label for="jazz">Jazz</label>
+            <div class="choice-1"> 
+                <input type="radio" id="grunge">
+                <label for="grunge">Grunge Metal</label>
+            </div>
 
-          <input type="radio" id="country">
-          <label for="country">Country</label>
+            <div class="choice-2">
+                <input type="radio" id="jazz">
+                <label for="jazz">Jazz</label>
+            </div>
 
-          <input type="button" value="Guess" onclick="sendSpotifyLink()">
+          </div>
+          
+          <div>
+            <button>Finish</button>
+         </div>
+        
       </form>
 
     <div id="spotify-link-container"></div>
@@ -98,5 +107,8 @@
 
 
     </div>
+    <script src="script.js"></script>
+
   </body>
+  
 </html>
