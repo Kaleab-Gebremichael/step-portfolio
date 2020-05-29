@@ -14,6 +14,8 @@
 
 const SPOTIFY_LINK = 'https://open.spotify.com/playlist/6rmiBWfdA4jGdTWaYMAQri';
 
+const EXTRA_CONTACT_LINK = 'https://www.reddit.com/user/Kaleab470'
+
 const RIGHT_ANSWERS = ['choice-2', 'choice-2', 'choice-1'];
 
 const MOVIES =
@@ -64,12 +66,16 @@ const questionList = [question2, question3];
 
 let clickedItems = [];
 let currentQuestionNumber = 0;
+let quizAttempt = false;  
 
 /**
  *  This function records the choices of the user and makes call to next
  *  question generator if appropriate.
  */
 function quizHandler(event) {
+  
+  quizAttempt = true;
+
   QUIZ.reset();
 
   if (currentQuestionNumber < questionList.length) {
@@ -134,3 +140,25 @@ function addRandomMovie() {
   const movieContainer = document.getElementById('movie-container');
   movieContainer.innerText = movie;
 }
+
+
+let attemptedQuiz = new Promise((resolve, reject) => {
+  
+  if (quizAttempt) {
+    resolve();
+  } else {
+    reject();
+  }
+
+});
+
+attemptedQuiz.then(() => {
+  
+  console.log("Quiz attempted!")
+
+  document.getElementById("special-contact").textContent = 
+    `Since you attempted the quiz, you get to connect with me on Reddit!
+    ${EXTRA_CONTACT_LINK}`;
+}).catch(() => {
+  console.log("Quiz not attempted yet");
+})
