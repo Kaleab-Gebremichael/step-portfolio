@@ -4,14 +4,53 @@
   width: 650px;
 }
 
+#about{
+    margin-top: 100px;
+}
+
 .photo {
     max-height: 50%;
     max-width: 50%;
     display: block;
+    margin-bottom: 20px;
 }
 
 .navbar {
     position: fixed;
+    margin: auto;
+    display: inline-block;
     top: 0;
-    margin-bottom: 50px;
+    overflow: hidden;
+    width: inherit;
+    background-color: grey;
+}
+
+.navbar a {
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.hidden {
+    display: none;
+}
+
+.navbar a:hover {
+  background: #ddd;
+  color: black;
+}
+
+h3{
+    margin-left: 75px;
+}
+
+h1{
+    margin-left: 75px;
+}
+
+body{
+    color: #40514E;
 }
