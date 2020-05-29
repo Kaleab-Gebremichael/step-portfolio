@@ -42,10 +42,10 @@ let currentQuestionNumber = 0;
  *  This function records the choices of the user and makes call to next 
  *  question generator if appropriate. 
 */
-QUIZ.addEventListener("click", function(event){
+function quizHandler(event){
     QUIZ.reset();
 
-    if(currentQuestionNumber != QUESTIONS_LIST.length){
+    if(currentQuestionNumber < QUESTIONS_LIST.length){
         clickedItems.push(event.srcElement.id);
         generateNextQuestion(currentQuestionNumber++);
     
@@ -53,9 +53,11 @@ QUIZ.addEventListener("click", function(event){
         QUIZ.classList.add("hidden");
 
         const scoreContainer = document.getElementById("score-container");
-        scoreContainer.innerHTML = "Please click Finish to calculate your score";
+        scoreContainer.textContent = "Please click Finish to calculate your score";
     }
-});
+}
+
+QUIZ.addEventListener("click", quizHandler);
 
 
 /**
