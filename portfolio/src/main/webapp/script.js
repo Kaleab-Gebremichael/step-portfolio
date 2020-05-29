@@ -61,7 +61,7 @@ const question3 = new Question("Which of the following apps don't I have on my p
                                 "Tiktok", 
                                 "Reddit");
 
-let questionList = [question2,question3];
+const questionList = [question2,question3];
 
 
 let clickedItems = [];
