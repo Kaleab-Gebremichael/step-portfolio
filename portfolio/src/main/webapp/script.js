@@ -19,21 +19,50 @@ const RIGHT_ANSWERS = ["choice-2", "choice-2", "choice-1"];
 const MOVIES =
       ['Austin Powers', 'Ace Ventura', 'Talladega Nights', 'The dictator'];
 
-const QUESTION_2 = {
-    question: "Which soccer team do I support?",
-    choice1: "Manchester City",
-    choice2: "Liverpool"
-}
-
-const QUESTION_3 = {
-    question: "Which of the following apps don't I have on my phone?",
-    choice1: "Tiktok",
-    choice2: "Reddit"
-}
-
-const QUESTIONS_LIST = [QUESTION_2,QUESTION_3];
-
 const QUIZ = document.getElementById("quiz");
+
+/**
+ *  A class to organize questions for the quiz section
+ */
+class Question{
+
+    /**
+     * @param {string} prompt The question being asked
+     * @param {string} choice1 The first choice
+     * @param {string} choice2 The second choice
+     */
+    constructor(prompt, choice1, choice2){
+        this.prompt_ = prompt;
+        this.choice1_ = choice1;
+        this.choice2_ = choice2;
+    }
+
+    /** @return {string} */
+    getPrompt(){
+        return this.prompt_;
+    }
+
+    /** @return {string} */
+    getChoice1(){
+        return this.choice1_;
+    }
+
+    /** @return {string} */
+    getChoice2(){
+        return this.choice2_;
+    }
+}
+
+const question2 = new Question("Which soccer team do I support?", 
+                                "Manchester City", 
+                                "Liverpool");
+
+const question3 = new Question("Which of the following apps don't I have on my phone?", 
+                                "Tiktok", 
+                                "Reddit");
+
+let questionList = [question2,question3];
+
 
 let clickedItems = [];
 let currentQuestionNumber = 0;
@@ -45,7 +74,7 @@ let currentQuestionNumber = 0;
 function quizHandler(event){
     QUIZ.reset();
 
-    if(currentQuestionNumber < QUESTIONS_LIST.length){
+    if(currentQuestionNumber < questionList.length){
         clickedItems.push(event.srcElement.id);
         generateNextQuestion(currentQuestionNumber++);
     
@@ -61,13 +90,13 @@ QUIZ.addEventListener("click", quizHandler);
 
 
 /**
- *   This function displays the next question available.
- *   @param {number} questionNumber  The question to display
+ *  This function displays the next question available.
+ *  @param {number} questionNumber  The question to display
  */
 function generateNextQuestion(questionNumber){
-    document.getElementById("question").innerText = QUESTIONS_LIST[questionNumber].question;
-    document.getElementById("choice_1").innerText = QUESTIONS_LIST[questionNumber].choice1;
-    document.getElementById("choice_2").innerText = QUESTIONS_LIST[questionNumber].choice2;
+    document.getElementById("question").innerText = questionList[questionNumber].getPrompt();
+    document.getElementById("choice_1").innerText = questionList[questionNumber].getChoice1();
+    document.getElementById("choice_2").innerText = questionList[questionNumber].getChoice2();
 }
 
 
@@ -84,7 +113,7 @@ document.getElementById("finish-button").addEventListener("click", () => {
 
     const scoreContainer = document.getElementById("score-container");
     
-    if(score > QUESTIONS_LIST.length / 2){
+    if(score > questionList.length / 2){
         scoreContainer.innerHTML = `Your score is ${score}! Here is a spotify link for you to enjoy:
             ${SPOTIFY_LINK}`;
     
