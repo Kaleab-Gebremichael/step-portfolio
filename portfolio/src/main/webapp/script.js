@@ -72,7 +72,6 @@ let currentQuestionNumber = 0;
  *  question generator if appropriate.
  */
 function quizHandler(event) {
-
   QUIZ.reset();
 
   if (currentQuestionNumber < questionList.length) {
@@ -129,34 +128,34 @@ document.getElementById('finish-button').addEventListener('click', () => {
 
 
 /** Adds a random movie list to the page. */
-function addRandomMovies(){
-  const FETCH_URL = 'https://api.themoviedb.org/3/movie/popular?api_key=688f3b09002b65951f1d5165728e5672&language=en-US&page=1'
-  // 688f3b09002b65951f1d5165728e5672
-  const movieContainer = document.getElementById('movie-container');
+function addRandomMovies() {
+  const API_KEY= '';
+  const FETCH_URL =
+      `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=en-US&page=1`
   
+  const movieContainer = document.getElementById('movie-container');
+
   movieContainer.textContent = 'Loading...';
 
   const moviePromise = fetch(FETCH_URL);
 
-  moviePromise.then((response) => {
-    return response.json();
-  
-  }).then((data) => {
-    movieContainer.innerHTML = parseJson(data);
-  });
-
+  moviePromise
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        movieContainer.innerHTML = parseJson(data);
+      });
 }
 
 
-function parseJson(data){
-
+function parseJson(data) {
   let result = `<ul>`;
-  for(let i = 0; i < data.results.length; ++i){
+  for (let i = 0; i < data.results.length; ++i) {
     result += `<li>${data.results[i].title}</li>`;
   }
-  
+
   result += `</ul>`;
 
   return result;
 }
-
