@@ -66,15 +66,12 @@ const questionList = [question2, question3];
 
 let clickedItems = [];
 let currentQuestionNumber = 0;
-let quizAttempt = false;  
 
 /**
  *  This function records the choices of the user and makes call to next
  *  question generator if appropriate.
  */
 function quizHandler(event) {
-  
-  quizAttempt = true;
 
   QUIZ.reset();
 
@@ -98,11 +95,11 @@ QUIZ.addEventListener('click', quizHandler);
  *  @param {number} questionNumber  The question to display
  */
 function generateNextQuestion(questionNumber) {
-  document.getElementById('question').innerText =
+  document.getElementById('question').textContent =
       questionList[questionNumber].getPrompt();
-  document.getElementById('choice_1').innerText =
+  document.getElementById('choice_1').textContent =
       questionList[questionNumber].getChoice1();
-  document.getElementById('choice_2').innerText =
+  document.getElementById('choice_2').textContent =
       questionList[questionNumber].getChoice2();
 }
 
@@ -121,44 +118,45 @@ document.getElementById('finish-button').addEventListener('click', () => {
   const scoreContainer = document.getElementById('score-container');
 
   if (score > questionList.length / 2) {
-    scoreContainer.innerHTML =
+    scoreContainer.textContent =
         `Your score is ${score}! Here is a spotify link for you to enjoy:
             ${SPOTIFY_LINK}`;
 
   } else {
-    scoreContainer.innerHTML = 'Your score is ' + score;
+    scoreContainer.textContent = 'Your score is ' + score;
   }
 });
 
 
-/** Adds a random greeting to the page. */
-function addRandomMovie() {
-  // Pick a random greeting.
-  const movie = MOVIES[Math.floor(Math.random() * MOVIES.length)];
-
-  // Add it to the page.
+/** Adds a random movie list to the page. */
+function addRandomMovies(){
+  const FETCH_URL = 'https://api.themoviedb.org/3/movie/popular?api_key=688f3b09002b65951f1d5165728e5672&language=en-US&page=1'
+  // 688f3b09002b65951f1d5165728e5672
   const movieContainer = document.getElementById('movie-container');
-  movieContainer.innerText = movie;
+  
+  movieContainer.textContent = 'Loading...';
+
+  const moviePromise = fetch(FETCH_URL);
+
+  moviePromise.then((response) => {
+    return response.json();
+  
+  }).then((data) => {
+    movieContainer.innerHTML = parseJson(data);
+  });
+
 }
 
 
-let attemptedQuiz = new Promise((resolve, reject) => {
-  
-  if (quizAttempt) {
-    resolve();
-  } else {
-    reject();
+function parseJson(data){
+
+  let result = `<ul>`;
+  for(let i = 0; i < data.results.length; ++i){
+    result += `<li>${data.results[i].title}</li>`;
   }
-
-});
-
-attemptedQuiz.then(() => {
   
-  console.log("Quiz attempted!")
+  result += `</ul>`;
 
-  document.getElementById("special-contact").textContent = 
-    `Since you attempted the quiz, you get to connect with me on Reddit!
-    ${EXTRA_CONTACT_LINK}`;
-}).catch(() => {
-  console.log("Quiz not attempted yet");
-})
+  return result;
+}
+

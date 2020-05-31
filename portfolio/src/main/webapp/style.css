@@ -15,6 +15,14 @@
     margin-bottom: 20px;
 }
 
+.paragraph-1 {
+  display: inline;
+}
+
+.quiz-intro {
+  margin-top: 50px;
+}
+
 .navbar {
     position: fixed;
     margin: auto;
