@@ -14,6 +14,8 @@
 
 const SPOTIFY_LINK = 'https://open.spotify.com/playlist/6rmiBWfdA4jGdTWaYMAQri';
 
+const EXTRA_CONTACT_LINK = 'https://www.reddit.com/user/Kaleab470'
+
 const RIGHT_ANSWERS = ['choice-2', 'choice-2', 'choice-1'];
 
 const MOVIES =
@@ -92,11 +94,11 @@ QUIZ.addEventListener('click', quizHandler);
  *  @param {number} questionNumber  The question to display
  */
 function generateNextQuestion(questionNumber) {
-  document.getElementById('question').innerText =
+  document.getElementById('question').textContent =
       questionList[questionNumber].getPrompt();
-  document.getElementById('choice_1').innerText =
+  document.getElementById('choice_1').textContent =
       questionList[questionNumber].getChoice1();
-  document.getElementById('choice_2').innerText =
+  document.getElementById('choice_2').textContent =
       questionList[questionNumber].getChoice2();
 }
 
@@ -115,22 +117,41 @@ document.getElementById('finish-button').addEventListener('click', () => {
   const scoreContainer = document.getElementById('score-container');
 
   if (score > questionList.length / 2) {
-    scoreContainer.innerHTML =
+    scoreContainer.textContent =
         `Your score is ${score}! Here is a spotify link for you to enjoy:
             ${SPOTIFY_LINK}`;
 
   } else {
-    scoreContainer.innerHTML = 'Your score is ' + score;
+    scoreContainer.textContent = 'Your score is ' + score;
   }
 });
 
 
-/** Adds a random greeting to the page. */
-function addRandomMovie() {
-  // Pick a random greeting.
-  const movie = MOVIES[Math.floor(Math.random() * MOVIES.length)];
-
-  // Add it to the page.
+/** Adds a random movie list to the page. */
+function addRandomMovies() {
+  const API_KEY= '';
+  const FETCH_URL =
+      `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=en-US&page=1`
+  
   const movieContainer = document.getElementById('movie-container');
-  movieContainer.innerText = movie;
+
+  const moviePromise = fetch(FETCH_URL);
+
+  moviePromise
+      .then(response => response.json())
+      .then((data) => movieContainer.appendChild(updateMovieText(data)));
+}
+
+
+
+function updateMovieText(data) {
+  let unorderedList = document.createElement('ul');
+  
+  for (let i = 0; i < data.results.length; ++i) {
+    let listItem = document.createElement('li');
+    listItem.textContent = data.results[i].title;
+    unorderedList.appendChild(listItem);
+  }
+
+  return unorderedList;
 }
