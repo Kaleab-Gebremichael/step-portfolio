@@ -155,3 +155,21 @@ function updateMovieText(data) {
 
   return unorderedList;
 }
+
+function displayName(){
+  fetch('/data')
+  .then((response) => {
+    
+    // //parse it as an html instead of text
+    // const parser = new DOMParser();
+	  // const htmlDoc = parser.parseFromString(response, 'text/html');
+    // console.log(htmlDoc);
+
+    // const introduction = htmlDoc.getElementsByTagName("h1")[0];
+
+    // console.log(introduction)
+
+    return response.text();
+  })
+  .then((introduction) => document.getElementById('about').textContent = introduction)
+}
