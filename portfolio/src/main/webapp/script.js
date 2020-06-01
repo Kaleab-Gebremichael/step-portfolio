@@ -158,27 +158,13 @@ function updateMovieText(data) {
 
 function displayName(){
   fetch('/data')
-  .then((response) => response.text()
-    
-    // //parse it as an html instead of text
-    // const parser = new DOMParser();
-	  // const htmlDoc = parser.parseFromString(response.text, 'text/html');
-    // console.log(htmlDoc);
-
-    // const introduction = htmlDoc.getElementsByTagName("h1")[0];
-
-    // console.log(introduction.textContent);
-
-    // return introduction.textContent;
-
-    // return response.text();
-  )
+  .then((response) => response.text())
   .then((introduction) => {
     const parser = new DOMParser();
 	  const htmlDoc = parser.parseFromString(introduction, 'text/html');
-    console.log(htmlDoc);
+
     const text = htmlDoc.getElementsByTagName('h1')[0].textContent;
-    console.log(text);
+
     document.getElementById('about').textContent = text;
   })
 }
