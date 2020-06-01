@@ -135,27 +135,23 @@ function addRandomMovies() {
   
   const movieContainer = document.getElementById('movie-container');
 
-  movieContainer.textContent = 'Loading...';
-
   const moviePromise = fetch(FETCH_URL);
 
   moviePromise
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        movieContainer.innerHTML = parseJson(data);
-      });
+      .then(response => response.json())
+      .then((data) => movieContainer.appendChild(updateMovieText(data)));
 }
 
 
-function parseJson(data) {
-  let result = `<ul>`;
+
+function updateMovieText(data) {
+  let unorderedList = document.createElement('ul');
+  
   for (let i = 0; i < data.results.length; ++i) {
-    result += `<li>${data.results[i].title}</li>`;
+    let listItem = document.createElement('li');
+    listItem.textContent = data.results[i].title;
+    unorderedList.appendChild(listItem);
   }
 
-  result += `</ul>`;
-
-  return result;
+  return unorderedList;
 }
