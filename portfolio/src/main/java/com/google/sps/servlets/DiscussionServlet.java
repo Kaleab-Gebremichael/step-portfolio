@@ -9,6 +9,8 @@ import com.google.gson.Gson;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
 
 
 @WebServlet("/discussion")
@@ -27,6 +29,17 @@ public class DiscussionServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     response.setContentType("application/json;");
+
+    Query query = new Query("Classic-Rock");
+
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    PreparedQuery result = datastore.prepare(query);
+
+    for (Entity entity : result.asIterable()) {
+      String songName = (String) entity.getProperty("songName");
+      classicRock.add(songName);
+    }
+
     String json = convertToJson(classicRock);
     response.getWriter().println(json);
   }
@@ -37,7 +50,6 @@ public class DiscussionServlet extends HttpServlet {
 
     Entity classicRock = new Entity("Classic-Rock");
     classicRock.setProperty("songName", songName);
-
 
     DatastoreService dataStore = DatastoreServiceFactory.getDatastoreService();
     dataStore.put(classicRock);
