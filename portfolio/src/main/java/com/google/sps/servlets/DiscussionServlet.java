@@ -11,6 +11,7 @@ import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.SortDirection;
 
 
 @WebServlet("/discussion")
@@ -26,7 +27,7 @@ public class DiscussionServlet extends HttpServlet {
     classicRock.add("Burnin' for you");
     classicRock.add("Holy Diver");
 
-    Query query = new Query("Classic-Rock");
+    Query query = new Query("Classic-Rock").addSort("commentTime", SortDirection.ASCENDING);
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery result = datastore.prepare(query);
@@ -46,6 +47,7 @@ public class DiscussionServlet extends HttpServlet {
 
     Entity song = new Entity("Classic-Rock");
     song.setProperty("songName", songName);
+    song.setProperty("commentTime", System.currentTimeMillis());
 
     DatastoreService dataStore = DatastoreServiceFactory.getDatastoreService();
     dataStore.put(song);
