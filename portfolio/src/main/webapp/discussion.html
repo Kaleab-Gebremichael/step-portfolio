@@ -1,13 +1,21 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>Discussion Board</title>
-  </head>
-  <body onload="displayList()">
-    <h2>Discussion Board</h2>
-    <div id="discussion-container"></div>
-    
-    <script src="discussionScript.js"></script>
-  </body>
+
+<head>
+  <meta charset="utf-8">
+  <title>Discussion Board</title>
+</head>
+
+<body onload="displayList()">
+  <h2>Discussion Board</h2>
+  <div id="discussion-container"></div>
+  <div id="form-container">
+    <form action="/discussion" method="POST">
+      <p>What else do you think belongs on this list?</p> 
+      <input type="text" name="song-name" placeholder="Song Name" autocomplete="off" /> <input type="submit"/>
+    </form>
+  </div>
+  <script src="discussionScript.js"></script>
+</body>
+
 </html>
