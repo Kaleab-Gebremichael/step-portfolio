@@ -15,20 +15,16 @@ import com.google.appengine.api.datastore.Query;
 
 @WebServlet("/discussion")
 public class DiscussionServlet extends HttpServlet {
-  private ArrayList<String> classicRock;
-
-  @Override
-  public void init() {
-    classicRock = new ArrayList<>();
-    classicRock.add("Sultans of Swing");
-    classicRock.add("Thunderstruck");
-    classicRock.add("Burnin' for you");
-    classicRock.add("Holy Diver");
-  }
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     response.setContentType("application/json;");
+
+    ArrayList<String> classicRock = new ArrayList<>();
+    classicRock.add("Sultans of Swing");
+    classicRock.add("Thunderstruck");
+    classicRock.add("Burnin' for you");
+    classicRock.add("Holy Diver");
 
     Query query = new Query("Classic-Rock");
 
@@ -48,11 +44,11 @@ public class DiscussionServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String songName = getParameter(request, "song-name", "");
 
-    Entity classicRock = new Entity("Classic-Rock");
-    classicRock.setProperty("songName", songName);
+    Entity song = new Entity("Classic-Rock");
+    song.setProperty("songName", songName);
 
     DatastoreService dataStore = DatastoreServiceFactory.getDatastoreService();
-    dataStore.put(classicRock);
+    dataStore.put(song);
 
     response.sendRedirect("/discussion.html");
   }
