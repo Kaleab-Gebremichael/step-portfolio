@@ -21,8 +21,6 @@ function displayList() {
       singlePost.appendChild(content);
 
       posts.appendChild(singlePost);
-
-      console.log(singlePost);
     }
 
     document.getElementById('discussion-container').appendChild(posts);

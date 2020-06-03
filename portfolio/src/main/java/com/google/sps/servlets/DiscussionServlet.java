@@ -69,8 +69,8 @@ public class DiscussionServlet extends HttpServlet {
     if (value == null) {
       return defaultValue;
     }
+    
     return value;
-
   }
 
 
