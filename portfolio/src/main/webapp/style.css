@@ -8,11 +8,31 @@
     margin-top: 100px;
 }
 
+#discussion-container {
+  margin-top: 50px;
+}
+
+.comment-form {
+  display: block;
+}
+
+.post {
+  margin-top: 50px;
+}
+
 .photo {
     max-height: 50%;
     max-width: 50%;
     display: block;
     margin-bottom: 20px;
+}
+
+.post-title {
+  font-weight: bold;
+}
+
+.post-content {
+  margin-left: 50px;
 }
 
 .paragraph-1 {

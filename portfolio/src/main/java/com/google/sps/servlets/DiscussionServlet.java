@@ -20,49 +20,29 @@ import com.google.sps.data.Post;
 @WebServlet("/discussion")
 public class DiscussionServlet extends HttpServlet {
 
-  private ArrayList<String> postTitles;
-
-  @Override
-  public void init() {
-    postTitles = new ArrayList<>();
-  }
-
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-    if (postTitles.isEmpty()){
-      response.setContentType("text/html;");
+    ArrayList<Post> allPosts = new ArrayList<Post>();
+      
+    Query query = new Query("Post").addSort("commentTime", SortDirection.ASCENDING);
 
-      response.getWriter().println("No discussions yet.");
-    
-    } else {
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    PreparedQuery result = datastore.prepare(query);
 
-      ArrayList<Post> allPosts = new ArrayList<Post>();
+    for (Entity entity : result.asIterable()) {
+      String postTitle = (String) entity.getProperty("postTitle");
+      String postContent = (String) entity.getProperty("postContent");
 
-      for (String title : postTitles){
-        
-        Query query = new Query(title).addSort("commentTime", SortDirection.ASCENDING);
+      Post curPost = new Post(postTitle, postContent);
+      allPosts.add(curPost);
 
-        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-        PreparedQuery result = datastore.prepare(query);
-
-        for (Entity entity : result.asIterable()) {
-          String postTitle = (String) entity.getProperty("postTitle");
-          String postContent = (String) entity.getProperty("postContent");
-
-          Post curPost = new Post(postTitle, postContent);
-          allPosts.add(curPost);
-
-        }
-          
-      }
-
-      String json = convertToJson(allPosts);
-
-      response.setContentType("application/json;");
-      response.getWriter().println(json);
     }
 
+    String json = convertToJson(allPosts);
+
+    response.setContentType("application/json;");
+    response.getWriter().println(json);
   }
 
   @Override
@@ -71,9 +51,8 @@ public class DiscussionServlet extends HttpServlet {
     String postContent = getParameter(request, "post-content", "");
 
     Post newPost = new Post(postTitle, postContent);
-    postTitles.add(newPost.getTitle());
 
-    Entity post = new Entity(newPost.getTitle());
+    Entity post = new Entity("Post");
     post.setProperty("postTitle", newPost.getTitle());
     post.setProperty("postContent", newPost.getContent());
     post.setProperty("commentTime", System.currentTimeMillis());
