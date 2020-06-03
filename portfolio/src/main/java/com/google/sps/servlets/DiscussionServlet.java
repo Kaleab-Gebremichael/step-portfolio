@@ -19,7 +19,6 @@ public class DiscussionServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    response.setContentType("application/json;");
 
     ArrayList<String> classicRock = new ArrayList<>();
     classicRock.add("Sultans of Swing");
@@ -38,6 +37,8 @@ public class DiscussionServlet extends HttpServlet {
     }
 
     String json = convertToJson(classicRock);
+
+    response.setContentType("application/json;");
     response.getWriter().println(json);
   }
 
@@ -57,12 +58,14 @@ public class DiscussionServlet extends HttpServlet {
 
   private String getParameter(HttpServletRequest request, String name, String defaultValue) {
     String value = request.getParameter(name);
+
     if (value == null) {
       return defaultValue;
     }
     return value;
 
   }
+
 
   private String convertToJson(ArrayList<String> data) {
     Gson gson = new Gson();
