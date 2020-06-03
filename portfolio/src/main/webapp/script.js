@@ -129,16 +129,15 @@ document.getElementById('finish-button').addEventListener('click', () => {
 
 /** Adds a random movie list to the page. */
 function addRandomMovies() {
-  const API_KEY= '';
-  const FETCH_URL =
-      `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=en-US&page=1`
-  
+  const API_KEY = '';
+  const FETCH_URL = `https://api.themoviedb.org/3/movie/popular?api_key=${
+      API_KEY}&language=en-US&page=1`
+
   const movieContainer = document.getElementById('movie-container');
 
   const moviePromise = fetch(FETCH_URL);
 
-  moviePromise
-      .then(response => response.json())
+  moviePromise.then(response => response.json())
       .then((data) => movieContainer.appendChild(updateMovieText(data)));
 }
 
@@ -146,7 +145,7 @@ function addRandomMovies() {
 
 function updateMovieText(data) {
   let unorderedList = document.createElement('ul');
-  
+
   for (let i = 0; i < data.results.length; ++i) {
     let listItem = document.createElement('li');
     listItem.textContent = data.results[i].title;
@@ -156,12 +155,10 @@ function updateMovieText(data) {
   return unorderedList;
 }
 
-function displayName(){
-  fetch('/data')
-  .then((response) => response.text())
-  .then((introduction) => {
+function displayName() {
+  fetch('/data').then((response) => response.text()).then((introduction) => {
     const parser = new DOMParser();
-	  const htmlDoc = parser.parseFromString(introduction, 'text/html');
+    const htmlDoc = parser.parseFromString(introduction, 'text/html');
 
     const text = htmlDoc.getElementsByTagName('h1')[0].textContent;
 
