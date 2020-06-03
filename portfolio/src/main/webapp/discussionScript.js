@@ -3,14 +3,27 @@ function displayList() {
   fetch('/discussion').then((response) => response.json()).then((data) => {
 
 
-    let unorderedList = document.createElement('ul');
+    let posts = document.createElement('div');
 
     for (let i = 0; i < data.length; ++i) {
-      let listItem = document.createElement('li');
-      listItem.textContent = data[i];
-      unorderedList.appendChild(listItem);
+      let title = document.createElement('div');
+      title.id = "post-title";
+      title.textContent = data[i].title;
+
+      let content = document.createElement('div');
+      content.id = "post-content";
+      content.textContent = data[i].content;
+
+
+      let singlePost = document.createElement('div');
+      singlePost.id = "post";
+
+      singlePost.appendChild(title);
+      singlePost.appendChild(content);
+
+      posts.appendChild(singlePost);
     }
 
-    document.getElementById('discussion-container').appendChild(unorderedList);
+    document.getElementById('discussion-container').appendChild(posts);
   })
 }
