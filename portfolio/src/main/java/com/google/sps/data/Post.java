@@ -1,4 +1,7 @@
 
+package com.google.sps.data;
+
+
 /**
  * Class representing an individual post.
  *
