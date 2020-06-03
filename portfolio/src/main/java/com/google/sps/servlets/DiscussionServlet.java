@@ -12,46 +12,67 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.appengine.api.datastore.FetchOptions;
+import com.google.sps.data.Post;
 
 
 @WebServlet("/discussion")
 public class DiscussionServlet extends HttpServlet {
 
+  private ArrayList<Post> posts;
+
+  @Override
+  public void init() {
+    posts = new ArrayList<Post>();
+  }
+
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-    ArrayList<String> classicRock = new ArrayList<>();
-    classicRock.add("Sultans of Swing");
-    classicRock.add("Thunderstruck");
-    classicRock.add("Burnin' for you");
-    classicRock.add("Holy Diver");
+    if (posts.isEmpty()){
+      response.setContentType("text/html;");
 
-    Query query = new Query("Classic-Rock").addSort("commentTime", SortDirection.ASCENDING);
+      response.getWriter().println("No discussions yet.");
+    
+    } else {
 
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    PreparedQuery result = datastore.prepare(query);
+      for (Post post : posts){
+        
+        Query query = new Query(post.getTitle()).addSort("commentTime", SortDirection.ASCENDING);
 
-    for (Entity entity : result.asIterable()) {
-      String songName = (String) entity.getProperty("songName");
-      classicRock.add(songName);
+        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+        PreparedQuery result = datastore.prepare(query);
+
+        for (Entity entity : result.asIterable()) {
+          String postTitle = (String) entity.getProperty("postTitle");
+          String postContent = (String) entity.getProperty("postContent");
+        }
+          
+      }
+
+      String json = convertToJson(classicRock);
+
+      response.setContentType("application/json;");
+      response.getWriter().println(json);
     }
 
-    String json = convertToJson(classicRock);
-
-    response.setContentType("application/json;");
-    response.getWriter().println(json);
   }
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String songName = getParameter(request, "song-name", "");
+    String postTitle = getParameter(request, "post-title", "");
+    String postContent = getParameter(request, "post-content", "");
 
-    Entity song = new Entity("Classic-Rock");
-    song.setProperty("songName", songName);
-    song.setProperty("commentTime", System.currentTimeMillis());
+    Post newPost = new Post(postTitle, postContent);
+    posts.add(newPost);
+
+    Entity post = new Entity(newPost.getTitle());
+    post.setProperty("postTitle", newPost.getTitle());
+    post.setProperty("postContent", newPost.getContent());
+    post.setProperty("commentTime", System.currentTimeMillis());
 
     DatastoreService dataStore = DatastoreServiceFactory.getDatastoreService();
-    dataStore.put(song);
+    dataStore.put(post);
 
     response.sendRedirect("/discussion.html");
   }

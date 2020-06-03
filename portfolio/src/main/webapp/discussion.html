@@ -8,12 +8,17 @@
 
 <body onload="displayList()">
   <h2>Discussion Board</h2>
-  <div id="discussion-container"></div>
   <div id="form-container">
     <form action="/discussion" method="POST">
-      <p>What else do you think belongs on this list?</p>
-      <input type="text" name="song-name" placeholder="Song Name" autocomplete="off"/> <input type="submit"/>
+      <input type="text" name="post-title" placeholder="Post Title" autocomplete="off"/>
+      <input type="text" name="post-content" placeholder="Post Content" autocomplete="off"/>
+      <input type="submit"/>
     </form>
+  </div>
+
+  <div id="discussion-container">
+    <div id="post-title"></div>
+    <div id="post-content"></div>
   </div>
   <script src="discussionScript.js"></script>
 </body>
