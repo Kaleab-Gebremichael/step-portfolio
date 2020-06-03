@@ -4,17 +4,22 @@
 <head>
   <meta charset="utf-8">
   <title>Discussion Board</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body onload="displayList()">
   <h2>Discussion Board</h2>
-  <div id="discussion-container"></div>
   <div id="form-container">
     <form action="/discussion" method="POST">
-      <p>What else do you think belongs on this list?</p>
-      <input type="text" name="song-name" placeholder="Song Name" autocomplete="off"/> <input type="submit"/>
+      <input class="comment-form" type="text" name="post-title" placeholder="Post Title" autocomplete="off"/>
+      <textarea class="comment-form" name="post-content" rows="10" cols="30" placeholder="Post content" autocomplete="off"></textarea>
+
+      <input type="submit" value="Post"/>
     </form>
   </div>
+
+  <div id="discussion-container"></div>
+
   <script src="discussionScript.js"></script>
 </body>
 
