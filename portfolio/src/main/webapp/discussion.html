@@ -4,14 +4,15 @@
 <head>
   <meta charset="utf-8">
   <title>Discussion Board</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body onload="displayList()">
   <h2>Discussion Board</h2>
   <div id="form-container">
-    <form class="comment-form" action="/discussion" method="POST">
-      <input type="text" name="post-title" placeholder="Post Title" autocomplete="off"/>
-      <textarea name="post-content" rows="10" cols="30" placeholder="Post content" autocomplete="off"></textarea>
+    <form action="/discussion" method="POST">
+      <input class="comment-form" type="text" name="post-title" placeholder="Post Title" autocomplete="off"/>
+      <textarea class="comment-form" name="post-content" rows="10" cols="30" placeholder="Post content" autocomplete="off"></textarea>
 
       <input type="submit" value="Post"/>
     </form>
