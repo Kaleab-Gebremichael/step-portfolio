@@ -17,7 +17,8 @@
 }
 
 .post {
-  margin-top: 50px;
+  margin-top: 25px;
+  border: 1px solid green;
 }
 
 .photo {
