@@ -6,15 +6,20 @@ public class Post {
   private String title;
   private String content;
   private long id;
+  private ArrayList<String> replies;
 
   public Post(String title, String content) {
-    this(title, content, uniqueIdentifierGenerator());
+    this.title = title;
+    this.content = content;
+    this.id = uniqueIdentifierGenerator();
+    this.replies = new ArrayList<>();
   }
 
   public Post(String title, String content, long id){
     this.title = title;
     this.content = content;
     this.id = id;
+    this.replies = new ArrayList<>();
   }
 
   public String getTitle() {
@@ -27,6 +32,10 @@ public class Post {
 
   public long getId(){
     return id;
+  }
+
+  public ArrayList<String> getReplies(){
+    return replies;
   }
 
   private long uniqueIdentifierGenerator(){

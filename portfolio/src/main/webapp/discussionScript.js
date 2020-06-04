@@ -38,10 +38,11 @@ function displayList() {
 function createReplyForm(singlePost, postId){
 
   let replyForm = document.createElement("form");
-  replyForm.action = `/reply?postID=${postId}`;
+  replyForm.action = `/reply?postId=${postId}`;
   replyForm.method = "POST";
 
   let inputBox = document.createElement("textarea");
+  inputBox.name = "reply-content"
   inputBox.rows = "2";
   inputBox.cols = "40";
 
