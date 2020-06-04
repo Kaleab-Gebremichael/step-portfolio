@@ -8,9 +8,7 @@ public class Post {
   private long id;
 
   public Post(String title, String content) {
-    this.title = title;
-    this.content = content;
-    this.id = uniqueIdentifierGenerator();
+    this(title, content, uniqueIdentifierGenerator());
   }
 
   public Post(String title, String content, long id){
