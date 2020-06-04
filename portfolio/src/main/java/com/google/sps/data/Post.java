@@ -1,11 +1,13 @@
 
 package com.google.sps.data;
 
+import java.util.ArrayList;
+
 /** Class representing an individual post. */
 public class Post {
   private String title;
   private String content;
-  private long id;
+  private String id;
   private ArrayList<String> replies;
 
   public Post(String title, String content) {
@@ -15,7 +17,7 @@ public class Post {
     this.replies = new ArrayList<>();
   }
 
-  public Post(String title, String content, long id){
+  public Post(String title, String content, String id){
     this.title = title;
     this.content = content;
     this.id = id;
@@ -30,7 +32,7 @@ public class Post {
     return content;
   }
 
-  public long getId(){
+  public String getId(){
     return id;
   }
 
@@ -38,8 +40,12 @@ public class Post {
     return replies;
   }
 
-  private long uniqueIdentifierGenerator(){
+  public void addReply(String reply){
+    replies.add(reply);
+  }
+
+  private String uniqueIdentifierGenerator(){
     long uniqueID = (long) (Math.random()*1001) + 1;
-    return uniqueID;
+    return String.valueOf(uniqueID);
   }
 }

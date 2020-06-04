@@ -12,6 +12,9 @@ import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.Filter;
+import com.google.appengine.api.datastore.Query.FilterOperator;
+import com.google.appengine.api.datastore.Query.FilterPredicate;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.datastore.FetchOptions;
 import com.google.sps.data.Post;
@@ -26,19 +29,31 @@ public class DiscussionServlet extends HttpServlet {
 
     ArrayList<Post> allPosts = new ArrayList<Post>();
       
-    Query query = new Query("Post").addSort("commentTime", SortDirection.ASCENDING);
+    Query postQuery = new Query("Post").addSort("commentTime", SortDirection.ASCENDING);
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    PreparedQuery result = datastore.prepare(query);
+    PreparedQuery posts = datastore.prepare(postQuery);
 
-    for (Entity entity : result.asIterable()) {
+    for (Entity entity : posts.asIterable()) {
+      
       String postTitle = (String) entity.getProperty("postTitle");
       String postContent = (String) entity.getProperty("postContent");
-      long postId = (long) entity.getProperty("postId");
+      String postId = (String) entity.getProperty("postId");
 
       Post curPost = new Post(postTitle, postContent, postId);
-      allPosts.add(curPost);
 
+      Filter keyFilter =  new FilterPredicate("postId", FilterOperator.EQUAL, postId);
+      Query replyQuery = new Query("Replies").setFilter(keyFilter);
+
+      PreparedQuery replies = datastore.prepare(replyQuery);
+
+      for (Entity cur : replies.asIterable()) {
+        String replyContent = (String) cur.getProperty("replyContent");
+
+        curPost.addReply(replyContent);
+      }
+
+      allPosts.add(curPost);
     }
 
     String json = convertToJson(allPosts);

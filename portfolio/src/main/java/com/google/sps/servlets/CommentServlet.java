@@ -26,13 +26,13 @@ public class CommentServlet extends HttpServlet {
     String postIdWithComment = getParameter(request, "postId", "");
     String replyContent = getParameter(request, "reply-content", "");
 
-    Entity comments = new Entity("Comments");
-    comments.setProperty("postId", postIdWithComment);
-    comments.setProperty("replyContent", replyContent);
-    comments.setProperty("commentTime", System.currentTimeMillis());
+    Entity replies = new Entity("Replies");
+    replies.setProperty("postId", postIdWithComment);
+    replies.setProperty("replyContent", replyContent);
+    replies.setProperty("commentTime", System.currentTimeMillis());
 
     DatastoreService dataStore = DatastoreServiceFactory.getDatastoreService();
-    dataStore.put(comments);
+    dataStore.put(replies);
 
     response.sendRedirect("/discussion.html");
   }
