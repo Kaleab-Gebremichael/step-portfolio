@@ -19,21 +19,24 @@ function displayList() {
 
       let replyButton = document.createElement('button');
       replyButton.textContent = "Reply to this post";
-      replyButton.onclick = `createReplyForm(${singlePost.id})`;
-
 
       singlePost.appendChild(title);
       singlePost.appendChild(content);
       singlePost.appendChild(replyButton);
 
       posts.appendChild(singlePost);
+
+      replyButton.addEventListener("click", () => {
+        replyButton.classList.add("hidden");
+        createReplyForm(singlePost, singlePost.id);
+      });
     }
 
     document.getElementById('discussion-container').appendChild(posts);
   })
 }
 
-function createReplyForm(postId){
+function createReplyForm(singlePost, postId){
 
   let replyForm = document.createElement("form");
   replyForm.action = `/reply?postID=${postId}`;
@@ -50,7 +53,7 @@ function createReplyForm(postId){
   replyForm.appendChild(inputBox);
   replyForm.appendChild(submitButton);
 
-  document.getElementById(postId).appendChild(replyForm);
+  singlePost.appendChild(replyForm);
 }
 
 function uniqueIdentifierGenerator(){
