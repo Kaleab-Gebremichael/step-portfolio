@@ -15,6 +15,7 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.datastore.FetchOptions;
 import com.google.sps.data.Post;
+import java.lang.Math;
 
 
 @WebServlet("/discussion")
@@ -33,8 +34,9 @@ public class DiscussionServlet extends HttpServlet {
     for (Entity entity : result.asIterable()) {
       String postTitle = (String) entity.getProperty("postTitle");
       String postContent = (String) entity.getProperty("postContent");
+      long postId = (long) entity.getProperty("postId");
 
-      Post curPost = new Post(postTitle, postContent);
+      Post curPost = new Post(postTitle, postContent, postId);
       allPosts.add(curPost);
 
     }
@@ -55,6 +57,7 @@ public class DiscussionServlet extends HttpServlet {
     Entity post = new Entity("Post");
     post.setProperty("postTitle", newPost.getTitle());
     post.setProperty("postContent", newPost.getContent());
+    post.setProperty("postId", newPost.getId());
     post.setProperty("commentTime", System.currentTimeMillis());
 
     DatastoreService dataStore = DatastoreServiceFactory.getDatastoreService();

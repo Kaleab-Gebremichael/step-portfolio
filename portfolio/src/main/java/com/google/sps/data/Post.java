@@ -5,11 +5,18 @@ package com.google.sps.data;
 public class Post {
   private String title;
   private String content;
+  private long id;
 
-  /** Returns whether this game has ended. */
   public Post(String title, String content) {
     this.title = title;
     this.content = content;
+    this.id = uniqueIdentifierGenerator();
+  }
+
+  public Post(String title, String content, long id){
+    this.title = title;
+    this.content = content;
+    this.id = id;
   }
 
   public String getTitle() {
@@ -18,5 +25,14 @@ public class Post {
 
   public String getContent() {
     return content;
+  }
+
+  public long getId(){
+    return id;
+  }
+
+  private long uniqueIdentifierGenerator(){
+    long uniqueID = (long) (Math.random()*1001) + 1;
+    return uniqueID;
   }
 }

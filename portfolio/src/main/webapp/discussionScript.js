@@ -15,7 +15,6 @@ function displayList() {
 
       let singlePost = document.createElement('div');
       singlePost.classList.add("post");
-      singlePost.id = uniqueIdentifierGenerator();  //as a unique identifier to the post.
 
       let replyButton = document.createElement('button');
       replyButton.textContent = "Reply to this post";
@@ -28,7 +27,7 @@ function displayList() {
 
       replyButton.addEventListener("click", () => {
         replyButton.classList.add("hidden");
-        createReplyForm(singlePost, singlePost.id);
+        createReplyForm(singlePost, data[i].id);
       });
     }
 
@@ -54,10 +53,4 @@ function createReplyForm(singlePost, postId){
   replyForm.appendChild(submitButton);
 
   singlePost.appendChild(replyForm);
-}
-
-function uniqueIdentifierGenerator(){
-   const identifier = Math.floor(Math.random() * 1000) + 1;
-
-   return identifier;
 }
