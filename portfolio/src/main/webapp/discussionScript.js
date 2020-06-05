@@ -5,6 +5,12 @@ function displayList() {
     let posts = document.createElement('div');
 
     for (let i = 0; i < data.length; ++i) {
+
+      let replyTime = new Date(parseInt(data[i].postTime)).toLocaleString();
+
+      let userIdentification = document.createElement("div");
+      userIdentification.textContent = `>>Anonymous wrote on ${replyTime}`;
+
       let title = document.createElement('div');
       title.classList.add("post-title");
       title.textContent = data[i].title;
@@ -22,6 +28,7 @@ function displayList() {
       let replyButton = document.createElement('button');
       replyButton.textContent = "Reply to this post";
 
+      singlePost.appendChild(userIdentification);
       singlePost.appendChild(title);
       singlePost.appendChild(content);
       singlePost.appendChild(replies);
