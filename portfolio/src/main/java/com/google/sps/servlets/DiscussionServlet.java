@@ -12,9 +12,14 @@ import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.Filter;
+import com.google.appengine.api.datastore.Query.FilterOperator;
+import com.google.appengine.api.datastore.Query.FilterPredicate;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.datastore.FetchOptions;
 import com.google.sps.data.Post;
+import com.google.sps.data.Reply;
+import java.lang.Math;
 
 
 @WebServlet("/discussion")
@@ -25,18 +30,36 @@ public class DiscussionServlet extends HttpServlet {
 
     ArrayList<Post> allPosts = new ArrayList<Post>();
       
-    Query query = new Query("Post").addSort("commentTime", SortDirection.ASCENDING);
+    Query postQuery = new Query("Post").addSort("commentTime", SortDirection.ASCENDING);
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    PreparedQuery result = datastore.prepare(query);
+    PreparedQuery posts = datastore.prepare(postQuery);
 
-    for (Entity entity : result.asIterable()) {
+    for (Entity entity : posts.asIterable()) {
+      
       String postTitle = (String) entity.getProperty("postTitle");
       String postContent = (String) entity.getProperty("postContent");
+      String postId = (String) entity.getProperty("postId");
+      String postTime = String.valueOf(entity.getProperty("commentTime"));
 
-      Post curPost = new Post(postTitle, postContent);
+      Post curPost = new Post(postTitle, postContent, postId, postTime);
+
+      Filter keyFilter =  new FilterPredicate("postId", FilterOperator.EQUAL, postId);
+      Query replyQuery = new Query("Replies").setFilter(keyFilter);
+      replyQuery.addSort("replyTime", SortDirection.ASCENDING);
+
+      PreparedQuery replies = datastore.prepare(replyQuery);
+
+      for (Entity cur : replies.asIterable()) {
+        String replyContent = (String) cur.getProperty("replyContent");
+        String replyTime = String.valueOf(cur.getProperty("replyTime"));
+
+        Reply curReply = new Reply(replyContent, replyTime);
+
+        curPost.addReply(curReply);
+      }
+
       allPosts.add(curPost);
-
     }
 
     String json = convertToJson(allPosts);
@@ -55,7 +78,8 @@ public class DiscussionServlet extends HttpServlet {
     Entity post = new Entity("Post");
     post.setProperty("postTitle", newPost.getTitle());
     post.setProperty("postContent", newPost.getContent());
-    post.setProperty("commentTime", System.currentTimeMillis());
+    post.setProperty("postId", newPost.getId());
+    post.setProperty("commentTime", newPost.getPostTime());
 
     DatastoreService dataStore = DatastoreServiceFactory.getDatastoreService();
     dataStore.put(post);
