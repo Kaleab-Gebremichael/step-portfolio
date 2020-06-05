@@ -49,7 +49,7 @@ function displayList() {
 /**
  *  This function creates a form that lets user reply to the comment of their choosing
  *  and then displays it underneath the post.
- *  @param {Object} singlePost Post object that is being replied to
+ *  @param {!Element} singlePost Post object that is being replied to
  *  @param {number} postId Id of the post being replied to
  */
 function createReplyForm(singlePost, postId){
@@ -75,8 +75,8 @@ function createReplyForm(singlePost, postId){
 
 /**
  *  This function organizes the replies of a given post
- *  @param {Object[]} singlePostReplies Array of replies to a single post
- *  @returns {Object} Organized version of replies
+ *  @param {!Array<!Object>} singlePostReplies Array of replies to a single post
+ *  @returns {!Element} Organized version of replies
  */
 function prepareReplies(singlePostReplies){
 
