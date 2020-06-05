@@ -64,10 +64,20 @@ function prepareReplies(singlePostReplies){
 
   let allReplyContainer = document.createElement("div");
 
-  for(let i = 0; i < singlePostReplies.length; ++i){
+  for (let i = 0; i < singlePostReplies.length; ++i) {
+
     let singleReply = document.createElement("div");
-    singleReply.textContent = singlePostReplies[i];
+
+    let userIdentification = document.createElement("div");
+    userIdentification.textContent = ">>>>Anonymous wrote:";
+
+    let replyContent = document.createElement("div");
+    replyContent.textContent = singlePostReplies[i];
+    replyContent.classList.add("reply-content");
     
+    singleReply.appendChild(userIdentification);
+    singleReply.appendChild(replyContent);
+
     allReplyContainer.appendChild(singleReply);
   }
 

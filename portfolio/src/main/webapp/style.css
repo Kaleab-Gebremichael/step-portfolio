@@ -33,7 +33,20 @@
 }
 
 .post-content {
-  margin-left: 50px;
+  margin-left: 25px;
+}
+
+.post-replies {
+  margin-top: 25px;
+  margin-bottom: 25px;
+}
+
+.reply-content {
+  margin-left: 75px;
+}
+
+.reply-content div {
+  padding-top: 12px;
 }
 
 .paragraph-1 {
