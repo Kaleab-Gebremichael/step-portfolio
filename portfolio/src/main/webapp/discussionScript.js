@@ -66,15 +66,15 @@ function prepareReplies(singlePostReplies){
 
   for (let i = 0; i < singlePostReplies.length; ++i) {
 
-    let replyTime = new Date(1591370080881).toLocaleString();
-    
+    let replyTime = new Date(parseInt(singlePostReplies[i].replyTime)).toLocaleString();
+
     let singleReply = document.createElement("div");
 
     let userIdentification = document.createElement("div");
-    userIdentification.textContent = ">>>>Anonymous wrote:";
+    userIdentification.textContent = `>>>>Anonymous wrote on ${replyTime}:`;
 
     let replyContent = document.createElement("div");
-    replyContent.textContent = singlePostReplies[i];
+    replyContent.textContent = singlePostReplies[i].content;
     replyContent.classList.add("reply-content");
     
     singleReply.appendChild(userIdentification);
