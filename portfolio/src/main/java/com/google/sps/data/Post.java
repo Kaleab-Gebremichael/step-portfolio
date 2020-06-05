@@ -1,6 +1,7 @@
 
 package com.google.sps.data;
 
+import com.google.sps.data.Reply;
 import java.util.ArrayList;
 
 /** Class representing an individual post. */
@@ -8,20 +9,20 @@ public class Post {
   private String title;
   private String content;
   private String id;
-  private ArrayList<String> replies;
+  private ArrayList<Reply> replies;
 
   public Post(String title, String content) {
     this.title = title;
     this.content = content;
     this.id = uniqueIdentifierGenerator();
-    this.replies = new ArrayList<>();
+    this.replies = new ArrayList<Reply>();
   }
 
   public Post(String title, String content, String id){
     this.title = title;
     this.content = content;
     this.id = id;
-    this.replies = new ArrayList<>();
+    this.replies = new ArrayList<Reply>();
   }
 
   public String getTitle() {
@@ -36,12 +37,12 @@ public class Post {
     return id;
   }
 
-  public ArrayList<String> getReplies(){
+  public ArrayList<Reply> getReplies(){
     return replies;
   }
 
-  public void addReply(String reply){
-    replies.add(reply);
+  public void addReply(Reply singleReply){
+    replies.add(singleReply);
   }
 
   private String uniqueIdentifierGenerator(){

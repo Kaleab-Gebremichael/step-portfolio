@@ -66,6 +66,8 @@ function prepareReplies(singlePostReplies){
 
   for (let i = 0; i < singlePostReplies.length; ++i) {
 
+    let replyTime = new Date(1591370080881).toLocaleString();
+    
     let singleReply = document.createElement("div");
 
     let userIdentification = document.createElement("div");

@@ -18,6 +18,7 @@ import com.google.appengine.api.datastore.Query.FilterPredicate;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.datastore.FetchOptions;
 import com.google.sps.data.Post;
+import com.google.sps.data.Reply;
 import java.lang.Math;
 
 
@@ -44,14 +45,17 @@ public class DiscussionServlet extends HttpServlet {
 
       Filter keyFilter =  new FilterPredicate("postId", FilterOperator.EQUAL, postId);
       Query replyQuery = new Query("Replies").setFilter(keyFilter);
-      replyQuery.addSort("commentTime", SortDirection.ASCENDING);
+      replyQuery.addSort("replyTime", SortDirection.ASCENDING);
 
       PreparedQuery replies = datastore.prepare(replyQuery);
 
       for (Entity cur : replies.asIterable()) {
         String replyContent = (String) cur.getProperty("replyContent");
+        String replyTime = String.valueOf(cur.getProperty("replyTime"));
 
-        curPost.addReply(replyContent);
+        Reply curReply = new Reply(replyContent, replyTime);
+
+        curPost.addReply(curReply);
       }
 
       allPosts.add(curPost);

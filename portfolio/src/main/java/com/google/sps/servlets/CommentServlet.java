@@ -29,7 +29,7 @@ public class CommentServlet extends HttpServlet {
     Entity replies = new Entity("Replies");
     replies.setProperty("postId", postIdWithComment);
     replies.setProperty("replyContent", replyContent);
-    replies.setProperty("commentTime", System.currentTimeMillis());
+    replies.setProperty("replyTime", System.currentTimeMillis());
 
     DatastoreService dataStore = DatastoreServiceFactory.getDatastoreService();
     dataStore.put(replies);
