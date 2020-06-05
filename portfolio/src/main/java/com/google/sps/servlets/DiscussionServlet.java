@@ -40,8 +40,9 @@ public class DiscussionServlet extends HttpServlet {
       String postTitle = (String) entity.getProperty("postTitle");
       String postContent = (String) entity.getProperty("postContent");
       String postId = (String) entity.getProperty("postId");
+      String postTime = String.valueOf(entity.getProperty("commentTime"));
 
-      Post curPost = new Post(postTitle, postContent, postId);
+      Post curPost = new Post(postTitle, postContent, postId, postTime);
 
       Filter keyFilter =  new FilterPredicate("postId", FilterOperator.EQUAL, postId);
       Query replyQuery = new Query("Replies").setFilter(keyFilter);
@@ -78,7 +79,7 @@ public class DiscussionServlet extends HttpServlet {
     post.setProperty("postTitle", newPost.getTitle());
     post.setProperty("postContent", newPost.getContent());
     post.setProperty("postId", newPost.getId());
-    post.setProperty("commentTime", System.currentTimeMillis());
+    post.setProperty("commentTime", newPost.getPostTime());
 
     DatastoreService dataStore = DatastoreServiceFactory.getDatastoreService();
     dataStore.put(post);

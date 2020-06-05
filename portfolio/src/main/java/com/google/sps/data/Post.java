@@ -9,19 +9,22 @@ public class Post {
   private String title;
   private String content;
   private String id;
+  private String postTime;
   private ArrayList<Reply> replies;
 
   public Post(String title, String content) {
     this.title = title;
     this.content = content;
     this.id = uniqueIdentifierGenerator();
+    this.postTime = String.valueOf(System.currentTimeMillis());
     this.replies = new ArrayList<Reply>();
   }
 
-  public Post(String title, String content, String id){
+  public Post(String title, String content, String id, String postTime){
     this.title = title;
     this.content = content;
     this.id = id;
+    this.postTime = postTime;
     this.replies = new ArrayList<Reply>();
   }
 
@@ -35,6 +38,10 @@ public class Post {
 
   public String getId(){
     return id;
+  }
+
+  public String getPostTime(){
+    return postTime;
   }
 
   public ArrayList<Reply> getReplies(){
