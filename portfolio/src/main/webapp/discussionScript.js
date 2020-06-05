@@ -46,6 +46,12 @@ function displayList() {
   })
 }
 
+/**
+ *  This function creates a form that lets user reply to the comment of their choosing
+ *  and then displays it underneath the post.
+ *  @param {Object} singlePost Post object that is being replied to
+ *  @param {number} postId Id of the post being replied to
+ */
 function createReplyForm(singlePost, postId){
 
   let replyForm = document.createElement("form");
@@ -67,6 +73,11 @@ function createReplyForm(singlePost, postId){
   singlePost.appendChild(replyForm);
 }
 
+/**
+ *  This function organizes the replies of a given post
+ *  @param {Object[]} singlePostReplies Array of replies to a single post
+ *  @returns {Object} Organized version of replies
+ */
 function prepareReplies(singlePostReplies){
 
   let allReplyContainer = document.createElement("div");
