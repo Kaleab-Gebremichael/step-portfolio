@@ -13,6 +13,9 @@ function displayList() {
       content.classList.add("post-content");
       content.textContent = data[i].content;
 
+      let replies = prepareReplies(data[i].replies);
+      replies.classList.add("post-replies");
+
       let singlePost = document.createElement('div');
       singlePost.classList.add("post");
 
@@ -21,6 +24,7 @@ function displayList() {
 
       singlePost.appendChild(title);
       singlePost.appendChild(content);
+      singlePost.appendChild(replies);
       singlePost.appendChild(replyButton);
 
       posts.appendChild(singlePost);
@@ -54,4 +58,18 @@ function createReplyForm(singlePost, postId){
   replyForm.appendChild(submitButton);
 
   singlePost.appendChild(replyForm);
+}
+
+function prepareReplies(singlePostReplies){
+
+  let allReplyContainer = document.createElement("div");
+
+  for(let i = 0; i < singlePostReplies.length; ++i){
+    let singleReply = document.createElement("div");
+    singleReply.textContent = singlePostReplies[i];
+    
+    allReplyContainer.appendChild(singleReply);
+  }
+
+  return allReplyContainer;
 }
