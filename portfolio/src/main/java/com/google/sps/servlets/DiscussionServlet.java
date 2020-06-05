@@ -44,6 +44,7 @@ public class DiscussionServlet extends HttpServlet {
 
       Filter keyFilter =  new FilterPredicate("postId", FilterOperator.EQUAL, postId);
       Query replyQuery = new Query("Replies").setFilter(keyFilter);
+      replyQuery.addSort("commentTime", SortDirection.ASCENDING);
 
       PreparedQuery replies = datastore.prepare(replyQuery);
 
