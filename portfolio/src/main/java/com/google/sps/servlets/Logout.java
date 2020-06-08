@@ -29,8 +29,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/signin")
-public class SignIn extends HttpServlet {
+@WebServlet("/logout")
+public class Logout extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -38,13 +38,12 @@ public class SignIn extends HttpServlet {
     UserService userService = UserServiceFactory.getUserService();
     if (!userService.isUserLoggedIn()) {
       
-      String loginUrl = userService.createLoginURL("/discussion.html");
-
-      response.getWriter().println("<p>Login <a href=\"" + loginUrl + "\">here</a> before accessing discussions.</p>");
-    
+      response.sendRedirect("/");
     } else {
 
-      response.sendRedirect("/discussion.html");
+      String logoutUrl = userService.createLogoutURL("/");
+
+      response.getWriter().println("<p>Logout <a href=\"" + logoutUrl + "\">here</a>.</p>");
     }
 
   }
