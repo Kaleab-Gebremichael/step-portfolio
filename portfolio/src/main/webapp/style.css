@@ -12,6 +12,10 @@
   margin-top: 50px;
 }
 
+#logout {
+  margin-left: 400px;
+}
+
 .comment-form {
   display: block;
 }
@@ -86,7 +90,7 @@
 }
 
 h3{
-    margin-left: 75px;
+  margin-left: 75px;
 }
 
 h1{

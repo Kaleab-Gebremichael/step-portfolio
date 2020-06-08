@@ -20,6 +20,8 @@ import com.google.appengine.api.datastore.FetchOptions;
 import com.google.sps.data.Post;
 import com.google.sps.data.Reply;
 import java.lang.Math;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 
 
 @WebServlet("/discussion")
@@ -27,6 +29,8 @@ public class DiscussionServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+    UserService userService = UserServiceFactory.getUserService();
 
     ArrayList<Post> allPosts = new ArrayList<Post>();
       
@@ -41,8 +45,9 @@ public class DiscussionServlet extends HttpServlet {
       String postContent = (String) entity.getProperty("postContent");
       String postId = (String) entity.getProperty("postId");
       String postTime = String.valueOf(entity.getProperty("commentTime"));
+      String userEmail = (String) entity.getProperty("userEmail");
 
-      Post curPost = new Post(postTitle, postContent, postId, postTime);
+      Post curPost = new Post(postTitle, postContent, postId, postTime, userEmail);
 
       Filter keyFilter =  new FilterPredicate("postId", FilterOperator.EQUAL, postId);
       Query replyQuery = new Query("Replies").setFilter(keyFilter);
@@ -53,8 +58,9 @@ public class DiscussionServlet extends HttpServlet {
       for (Entity cur : replies.asIterable()) {
         String replyContent = (String) cur.getProperty("replyContent");
         String replyTime = String.valueOf(cur.getProperty("replyTime"));
+        String replyUserEmail = (String) cur.getProperty("userEmail");
 
-        Reply curReply = new Reply(replyContent, replyTime);
+        Reply curReply = new Reply(replyContent, replyTime, replyUserEmail);
 
         curPost.addReply(curReply);
       }
@@ -70,15 +76,19 @@ public class DiscussionServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    UserService userService = UserServiceFactory.getUserService();
+
     String postTitle = getParameter(request, "post-title", "");
     String postContent = getParameter(request, "post-content", "");
+    String userEmail = userService.getCurrentUser().getEmail();
 
-    Post newPost = new Post(postTitle, postContent);
+    Post newPost = new Post(postTitle, postContent, userEmail);
 
     Entity post = new Entity("Post");
     post.setProperty("postTitle", newPost.getTitle());
     post.setProperty("postContent", newPost.getContent());
     post.setProperty("postId", newPost.getId());
+    post.setProperty("userEmail", newPost.getUserEmail());
     post.setProperty("commentTime", newPost.getPostTime());
 
     DatastoreService dataStore = DatastoreServiceFactory.getDatastoreService();

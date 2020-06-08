@@ -10,21 +10,24 @@ public class Post {
   private String content;
   private String id;
   private String postTime;
+  private String userEmail;
   private ArrayList<Reply> replies;
 
-  public Post(String title, String content) {
+  public Post(String title, String content, String userEmail) {
     this.title = title;
     this.content = content;
+    this.userEmail = userEmail;
     this.id = uniqueIdentifierGenerator();
     this.postTime = String.valueOf(System.currentTimeMillis());
     this.replies = new ArrayList<Reply>();
   }
 
-  public Post(String title, String content, String id, String postTime){
+  public Post(String title, String content, String id, String postTime, String userEmail){
     this.title = title;
     this.content = content;
     this.id = id;
     this.postTime = postTime;
+    this.userEmail = userEmail;
     this.replies = new ArrayList<Reply>();
   }
 
@@ -42,6 +45,10 @@ public class Post {
 
   public String getPostTime(){
     return postTime;
+  }
+
+  public String getUserEmail(){
+    return userEmail;
   }
 
   public ArrayList<Reply> getReplies(){
