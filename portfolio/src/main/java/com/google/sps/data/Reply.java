@@ -3,6 +3,7 @@ package com.google.sps.data;
 
 /** Class representing an individual reply. */
 public class Reply {
+  private String userName
   private String content;
   private String replyTime;
 
