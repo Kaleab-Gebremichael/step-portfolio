@@ -36,15 +36,16 @@ public class SignIn extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
     UserService userService = UserServiceFactory.getUserService();
-    if (userService.isUserLoggedIn()) {
-      response.sendRedirect("/discussion.html");
+    if (!userService.isUserLoggedIn()) {
+      
+      String loginUrl = userService.createLoginURL("/discussion.html");
+
+      response.getWriter().println("<p>Login <a href=\"" + loginUrl + "\">here</a>.</p>");
     
     } else {
 
-      response.getWriter().println("Please sign in first");
-      String loginUrl = userService.createLoginURL("/discussion.html");
-      // String logoutUrl = userService.createLogoutURL("/");
-      response.getWriter().println("<p>Login <a href=\"" + loginUrl + "\">here</a>.</p>");
+      String logoutUrl = userService.createLogoutURL("/");
+      response.sendRedirect("/discussion.html");
     }
 
   }
