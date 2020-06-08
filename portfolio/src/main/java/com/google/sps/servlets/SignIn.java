@@ -23,15 +23,13 @@ public class SignIn extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
     UserService userService = UserServiceFactory.getUserService();
-    if (!userService.isUserLoggedIn()) {
-      
-      String loginUrl = userService.createLoginURL("/discussion.html");
-
-      response.getWriter().println("<p>Login <a href=\"" + loginUrl + "\">here</a> before accessing discussions.</p>");
+    if (userService.isUserLoggedIn()) {
+      response.sendRedirect("/discussion.html");
     
     } else {
+      String loginUrl = userService.createLoginURL("/discussion.html");
 
-      response.sendRedirect("/discussion.html");
+      response.getWriter().println("<p>Login <a href=\"" + loginUrl + "\">here</a> before accessing discussions.</p>");      
     }
 
   }

@@ -23,14 +23,13 @@ public class Logout extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
     UserService userService = UserServiceFactory.getUserService();
-    if (!userService.isUserLoggedIn()) {
-      
-      response.sendRedirect("/");
-    } else {
-
+    if (userService.isUserLoggedIn()) {
       String logoutUrl = userService.createLogoutURL("/");
 
       response.getWriter().println("<p>Logout <a href=\"" + logoutUrl + "\">here</a>.</p>");
+      
+    } else {
+      response.sendRedirect("/");
     }
 
   }
