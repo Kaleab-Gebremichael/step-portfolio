@@ -7,9 +7,10 @@ function displayList() {
     for (let i = 0; i < data.length; ++i) {
 
       let replyTime = new Date(parseInt(data[i].postTime)).toLocaleString();
+      let userEmail = data[i].userEmail;
 
       let userIdentification = document.createElement("div");
-      userIdentification.textContent = `>>Anonymous wrote on ${replyTime}`;
+      userIdentification.textContent = `>>${userEmail} wrote on ${replyTime}`;
 
       let title = document.createElement('div');
       title.classList.add("post-title");
@@ -85,11 +86,12 @@ function prepareReplies(singlePostReplies){
   for (let i = 0; i < singlePostReplies.length; ++i) {
 
     let replyTime = new Date(parseInt(singlePostReplies[i].replyTime)).toLocaleString();
+    let userEmail = singlePostReplies[i].userEmail;
 
     let singleReply = document.createElement("div");
 
     let userIdentification = document.createElement("div");
-    userIdentification.textContent = `>>>>Anonymous wrote on ${replyTime}:`;
+    userIdentification.textContent = `>>>>${userEmail} wrote on ${replyTime}:`;
 
     let replyContent = document.createElement("div");
     replyContent.textContent = singlePostReplies[i].content;
