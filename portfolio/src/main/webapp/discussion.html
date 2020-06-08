@@ -9,6 +9,9 @@
 
 <body onload="displayList()">
   <h2>Discussion Board</h2>
+  <form action="/logout">
+    <input id="logout" type="submit" value="Logout"/>
+  </form>
   <div id="form-container">
     <form action="/discussion" method="POST">
       <input class="comment-form" type="text" name="post-title" placeholder="Post Title" autocomplete="off"/>

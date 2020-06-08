@@ -40,11 +40,11 @@ public class SignIn extends HttpServlet {
       
       String loginUrl = userService.createLoginURL("/discussion.html");
 
-      response.getWriter().println("<p>Login <a href=\"" + loginUrl + "\">here</a>.</p>");
+      response.getWriter().println("<p>Login <a href=\"" + loginUrl + "\">here</a> before accessing discussions.</p>");
     
     } else {
 
-      String logoutUrl = userService.createLogoutURL("/");
+      // String logoutUrl = userService.createLogoutURL("/");
       response.sendRedirect("/discussion.html");
     }
 
