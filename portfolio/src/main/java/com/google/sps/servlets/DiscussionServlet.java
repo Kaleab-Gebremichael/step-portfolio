@@ -58,8 +58,9 @@ public class DiscussionServlet extends HttpServlet {
       for (Entity cur : replies.asIterable()) {
         String replyContent = (String) cur.getProperty("replyContent");
         String replyTime = String.valueOf(cur.getProperty("replyTime"));
+        String userEmail = (String) cur.getProperty("userEmail");
 
-        Reply curReply = new Reply(replyContent, replyTime);
+        Reply curReply = new Reply(replyContent, replyTime, userEmail);
 
         curPost.addReply(curReply);
       }

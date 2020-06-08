@@ -16,6 +16,8 @@ import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.datastore.FetchOptions;
 import com.google.sps.data.Post;
 import java.lang.Math;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 
 
 @WebServlet("/reply")
@@ -23,12 +25,17 @@ public class CommentServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+    UserService userService = UserServiceFactory.getUserService();
+
     String postIdWithComment = getParameter(request, "postId", "");
     String replyContent = getParameter(request, "reply-content", "");
+    String userEmail = userService.getCurrentUser().getEmail();
 
     Entity replies = new Entity("Replies");
     replies.setProperty("postId", postIdWithComment);
     replies.setProperty("replyContent", replyContent);
+    replies.setProperty("userEmail", userEmail);
     replies.setProperty("replyTime", System.currentTimeMillis());
 
     DatastoreService dataStore = DatastoreServiceFactory.getDatastoreService();
