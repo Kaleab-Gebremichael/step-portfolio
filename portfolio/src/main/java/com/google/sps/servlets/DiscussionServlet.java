@@ -30,44 +30,8 @@ public class DiscussionServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-    UserService userService = UserServiceFactory.getUserService();
-
-    ArrayList<Post> allPosts = new ArrayList<Post>();
-      
-    Query postQuery = new Query("Post").addSort("commentTime", SortDirection.ASCENDING);
-
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    PreparedQuery posts = datastore.prepare(postQuery);
-
-    for (Entity entity : posts.asIterable()) {
-      
-      String postTitle = (String) entity.getProperty("postTitle");
-      String postContent = (String) entity.getProperty("postContent");
-      String postId = (String) entity.getProperty("postId");
-      String postTime = String.valueOf(entity.getProperty("commentTime"));
-      String userEmail = (String) entity.getProperty("userEmail");
-
-      Post curPost = new Post(postTitle, postContent, postId, postTime, userEmail);
-
-      Filter keyFilter =  new FilterPredicate("postId", FilterOperator.EQUAL, postId);
-      Query replyQuery = new Query("Replies").setFilter(keyFilter);
-      replyQuery.addSort("replyTime", SortDirection.ASCENDING);
-
-      PreparedQuery replies = datastore.prepare(replyQuery);
-
-      for (Entity cur : replies.asIterable()) {
-        String replyContent = (String) cur.getProperty("replyContent");
-        String replyTime = String.valueOf(cur.getProperty("replyTime"));
-        String replyUserEmail = (String) cur.getProperty("userEmail");
-
-        Reply curReply = new Reply(replyContent, replyTime, replyUserEmail);
-
-        curPost.addReply(curReply);
-      }
-
-      allPosts.add(curPost);
-    }
-
+    ArrayList<Post> allPosts = organizeData();
+    
     String json = convertToJson(allPosts);
 
     response.setContentType("application/json;");
@@ -108,9 +72,50 @@ public class DiscussionServlet extends HttpServlet {
   }
 
 
-  private String convertToJson(ArrayList<Post> data) {
+  public String convertToJson(ArrayList<Post> data) {
     Gson gson = new Gson();
     String json = gson.toJson(data);
     return json;
+  }
+
+  public static ArrayList<Post> organizeData() {
+
+    ArrayList<Post> allPosts = new ArrayList<Post>();
+      
+    Query postQuery = new Query("Post").addSort("commentTime", SortDirection.ASCENDING);
+
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    PreparedQuery posts = datastore.prepare(postQuery);
+
+    for (Entity entity : posts.asIterable()) {
+      
+      String postTitle = (String) entity.getProperty("postTitle");
+      String postContent = (String) entity.getProperty("postContent");
+      String postId = (String) entity.getProperty("postId");
+      String postTime = String.valueOf(entity.getProperty("commentTime"));
+      String userEmail = (String) entity.getProperty("userEmail");
+
+      Post curPost = new Post(postTitle, postContent, postId, postTime, userEmail);
+
+      Filter keyFilter =  new FilterPredicate("postId", FilterOperator.EQUAL, postId);
+      Query replyQuery = new Query("Replies").setFilter(keyFilter);
+      replyQuery.addSort("replyTime", SortDirection.ASCENDING);
+
+      PreparedQuery replies = datastore.prepare(replyQuery);
+
+      for (Entity cur : replies.asIterable()) {
+        String replyContent = (String) cur.getProperty("replyContent");
+        String replyTime = String.valueOf(cur.getProperty("replyTime"));
+        String replyUserEmail = (String) cur.getProperty("userEmail");
+
+        Reply curReply = new Reply(replyContent, replyTime, replyUserEmail);
+
+        curPost.addReply(curReply);
+      }
+
+      allPosts.add(curPost);
+    }
+
+    return allPosts;
   }
 }
