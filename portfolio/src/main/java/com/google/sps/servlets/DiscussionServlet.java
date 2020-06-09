@@ -30,7 +30,10 @@ public class DiscussionServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-    ArrayList<Post> allPosts = organizeData();
+    //default language is empty string because I don't want to do an unnecessary conversion from english -> english
+    String language = getParameter(request, "language", "");
+
+    ArrayList<Post> allPosts = organizeData(language);
     
     String json = convertToJson(allPosts);
 
@@ -78,7 +81,7 @@ public class DiscussionServlet extends HttpServlet {
     return json;
   }
 
-  public static ArrayList<Post> organizeData() {
+  public static ArrayList<Post> organizeData(String languageCode) {
 
     ArrayList<Post> allPosts = new ArrayList<Post>();
       

@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="style.css">
 </head>
 
-<body onload="displayList('/discussion')">
+<body onload='displayList("")'>
   <h2>Discussion Board</h2>
   <form action="/logout">
     <input id="logout" type="submit" value="Logout"/>
@@ -23,17 +23,15 @@
 
   <div id="translation-container">
     <p>Translate options:</p>
-    <form action="/translate">
-      <select name="language">
-        <option value="es">English</option>
+      <select id="language" name="language">
+        <option value="en">English</option>
         <option value="zh">Chinese</option>
         <option value="es">Spanish</option>
         <option value="hi">Hindi</option>
         <option value="ar">Arabic</option>
       </select>
 
-      <input id="" type="submit" value="Translate"/>
-    </form>
+      <input type="submit" onclick="checkTranslation()" value="Translate"/>
   </div>
 
   <div id="discussion-container"></div>
