@@ -107,13 +107,13 @@ public class DiscussionServlet extends HttpServlet {
       //This is where i translate postTitle and postContent if needed
       if (languageCode != "") {
         Translation translationTitle = translate.translate(postTitle, Translate.TranslateOption.targetLanguage(languageCode));
-        String translatedPostTitle = translationTitle.getTranslatedText();
+        postTitle = translationTitle.getTranslatedText();
 
         Translation translationContent = translate.translate(postContent, Translate.TranslateOption.targetLanguage(languageCode));
-        String translatedPostContent = translationContent.getTranslatedText();
+        postContent = translationContent.getTranslatedText();
       }
 
-      Post curPost = new Post(translatedPostTitle, translatedPostContent, postId, postTime, userEmail);
+      Post curPost = new Post(postTitle, postContent, postId, postTime, userEmail);
 
       Filter keyFilter =  new FilterPredicate("postId", FilterOperator.EQUAL, postId);
       Query replyQuery = new Query("Replies").setFilter(keyFilter);
