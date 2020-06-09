@@ -22,6 +22,9 @@ import com.google.sps.data.Reply;
 import java.lang.Math;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.google.cloud.translate.Translate;
+import com.google.cloud.translate.TranslateOptions;
+import com.google.cloud.translate.Translation;
 
 
 @WebServlet("/discussion")
@@ -83,6 +86,8 @@ public class DiscussionServlet extends HttpServlet {
 
   public static ArrayList<Post> organizeData(String languageCode) {
 
+    Translate translate = TranslateOptions.getDefaultInstance().getService();
+
     ArrayList<Post> allPosts = new ArrayList<Post>();
       
     Query postQuery = new Query("Post").addSort("commentTime", SortDirection.ASCENDING);
@@ -98,7 +103,17 @@ public class DiscussionServlet extends HttpServlet {
       String postTime = String.valueOf(entity.getProperty("commentTime"));
       String userEmail = (String) entity.getProperty("userEmail");
 
-      Post curPost = new Post(postTitle, postContent, postId, postTime, userEmail);
+
+      //This is where i translate postTitle and postContent if needed
+      if (languageCode != "") {
+        Translation translationTitle = translate.translate(postTitle, Translate.TranslateOption.targetLanguage(languageCode));
+        String translatedPostTitle = translationTitle.getTranslatedText();
+
+        Translation translationContent = translate.translate(postContent, Translate.TranslateOption.targetLanguage(languageCode));
+        String translatedPostContent = translationContent.getTranslatedText();
+      }
+
+      Post curPost = new Post(translatedPostTitle, translatedPostContent, postId, postTime, userEmail);
 
       Filter keyFilter =  new FilterPredicate("postId", FilterOperator.EQUAL, postId);
       Query replyQuery = new Query("Replies").setFilter(keyFilter);

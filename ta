@@ -1,0 +1,116 @@
+[1mdiff --git a/portfolio/src/main/java/com/google/sps/servlets/DiscussionServlet.java b/portfolio/src/main/java/com/google/sps/servlets/DiscussionServlet.java[m
+[1mindex 1f83410..0c6ec60 100644[m
+[1m--- a/portfolio/src/main/java/com/google/sps/servlets/DiscussionServlet.java[m
+[1m+++ b/portfolio/src/main/java/com/google/sps/servlets/DiscussionServlet.java[m
+[36m@@ -30,7 +30,10 @@[m [mpublic class DiscussionServlet extends HttpServlet {[m
+   @Override[m
+   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {[m
+ [m
+[31m-    ArrayList<Post> allPosts = organizeData();[m
+[32m+[m[32m    //default language is empty string because I don't want to do an unnecessary conversion from english -> english[m
+[32m+[m[32m    String language = getParameter(request, "language", "");[m
+[32m+[m
+[32m+[m[32m    ArrayList<Post> allPosts = organizeData(language);[m
+     [m
+     String json = convertToJson(allPosts);[m
+ [m
+[36m@@ -78,7 +81,7 @@[m [mpublic class DiscussionServlet extends HttpServlet {[m
+     return json;[m
+   }[m
+ [m
+[31m-  public static ArrayList<Post> organizeData() {[m
+[32m+[m[32m  public static ArrayList<Post> organizeData(String languageCode) {[m
+ [m
+     ArrayList<Post> allPosts = new ArrayList<Post>();[m
+       [m
+[1mdiff --git a/portfolio/src/main/java/com/google/sps/servlets/TranslationServlet.java b/portfolio/src/main/java/com/google/sps/servlets/TranslationServlet.java[m
+[1mdeleted file mode 100644[m
+[1mindex 31bd98c..0000000[m
+[1m--- a/portfolio/src/main/java/com/google/sps/servlets/TranslationServlet.java[m
+[1m+++ /dev/null[m
+[36m@@ -1,28 +0,0 @@[m
+[31m-[m
+[31m-package com.google.sps.servlets;[m
+[31m-[m
+[31m-import com.google.cloud.translate.Translate;[m
+[31m-import com.google.cloud.translate.TranslateOptions;[m
+[31m-import com.google.cloud.translate.Translation;[m
+[31m-import java.io.IOException;[m
+[31m-import javax.servlet.annotation.WebServlet;[m
+[31m-import javax.servlet.http.HttpServlet;[m
+[31m-import javax.servlet.http.HttpServletRequest;[m
+[31m-import javax.servlet.http.HttpServletResponse;[m
+[31m-[m
+[31m-@WebServlet("/translate")[m
+[31m-public class TranslationServlet extends HttpServlet {[m
+[31m-[m
+[31m-  @Override[m
+[31m-  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {[m
+[31m-    String languageCode = request.getParameter("language");[m
+[31m-  [m
+[31m-    Translate translate = TranslateOptions.getDefaultInstance().getService();[m
+[31m-    Translation translation =[m
+[31m-        translate.translate(originalText, Translate.TranslateOption.targetLanguage(languageCode));[m
+[31m-    String translatedText = translation.getTranslatedText();[m
+[31m-[m
+[31m-    response.setContentType("text/html; charset=UTF-8");[m
+[31m-    response.getWriter().println(translatedText);[m
+[31m-  }[m
+[31m-}[m
+[1mdiff --git a/portfolio/src/main/webapp/discussion.html b/portfolio/src/main/webapp/discussion.html[m
+[1mindex c9a00aa..9256894 100644[m
+[1m--- a/portfolio/src/main/webapp/discussion.html[m
+[1m+++ b/portfolio/src/main/webapp/discussion.html[m
+[36m@@ -7,7 +7,7 @@[m
+   <link rel="stylesheet" href="style.css">[m
+ </head>[m
+ [m
+[31m-<body onload="displayList('/discussion')">[m
+[32m+[m[32m<body onload='displayList("")'>[m
+   <h2>Discussion Board</h2>[m
+   <form action="/logout">[m
+     <input id="logout" type="submit" value="Logout"/>[m
+[36m@@ -23,17 +23,15 @@[m
+ [m
+   <div id="translation-container">[m
+     <p>Translate options:</p>[m
+[31m-    <form action="/translate">[m
+[31m-      <select name="language">[m
+[31m-        <option value="es">English</option>[m
+[32m+[m[32m      <select id="language" name="language">[m
+[32m+[m[32m        <option value="en">English</option>[m
+         <option value="zh">Chinese</option>[m
+         <option value="es">Spanish</option>[m
+         <option value="hi">Hindi</option>[m
+         <option value="ar">Arabic</option>[m
+       </select>[m
+ [m
+[31m-      <input id="" type="submit" value="Translate"/>[m
+[31m-    </form>[m
+[32m+[m[32m      <input type="submit" onclick="checkTranslation()" value="Translate"/>[m
+   </div>[m
+ [m
+   <div id="discussion-container"></div>[m
+[1mdiff --git a/portfolio/src/main/webapp/discussionScript.js b/portfolio/src/main/webapp/discussionScript.js[m
+[1mindex 4a552b9..921b629 100644[m
+[1m--- a/portfolio/src/main/webapp/discussionScript.js[m
+[1m+++ b/portfolio/src/main/webapp/discussionScript.js[m
+[36m@@ -1,7 +1,16 @@[m
+ [m
+[31m-function displayList(URL) {[m
+[31m-  fetch(URL).then((response) => response.json()).then((data) => {[m
+[32m+[m[32mfunction checkTranslation(){[m
+ [m
+[32m+[m[32m  let input = document.getElementById("language");[m
+[32m+[m[32m  let languageCode = input.options[e.selectedIndex].value;[m
+[32m+[m[32m  displayList("language=" + languageCode);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m
+[32m+[m[32mfunction displayList(parameter) {[m
+[32m+[m[32m  fetch('/discussion?' + parameter).then((response) => response.json()).then((data) => {[m
+[32m+[m
+[32m+[m[32m    //clear out page before loading[m
+     let posts = document.createElement('div');[m
+ [m
+     for (let i = 0; i < data.length; ++i) {[m
