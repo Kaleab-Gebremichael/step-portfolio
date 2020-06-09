@@ -2,7 +2,7 @@
 function checkTranslation(){
 
   let input = document.getElementById("language");
-  let languageCode = input.options[e.selectedIndex].value;
+  let languageCode = input.options[input.selectedIndex].value;
   displayList("language=" + languageCode);
 }
 
