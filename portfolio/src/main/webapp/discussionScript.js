@@ -1,6 +1,6 @@
 
-function displayList() {
-  fetch('/discussion').then((response) => response.json()).then((data) => {
+function displayList(URL) {
+  fetch(URL).then((response) => response.json()).then((data) => {
 
     let posts = document.createElement('div');
 
