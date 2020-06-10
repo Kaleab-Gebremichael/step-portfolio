@@ -11,6 +11,8 @@ function displayList(parameter) {
   fetch('/discussion?' + parameter).then((response) => response.json()).then((data) => {
 
     //clear out page before loading
+    document.getElementById('discussion-container').textContent = '';
+
     let posts = document.createElement('div');
 
     for (let i = 0; i < data.length; ++i) {
