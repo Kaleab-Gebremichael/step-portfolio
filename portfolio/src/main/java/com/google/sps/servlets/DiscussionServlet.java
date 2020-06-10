@@ -33,8 +33,8 @@ public class DiscussionServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-    //default language is empty string because I don't want to do an unnecessary conversion from english -> english
-    String language = getParameter(request, "language", "");
+    //default language is english if user doesn't ask for translate
+    String language = getParameter(request, "language", "en");
 
     ArrayList<Post> allPosts = organizeData(language);
     
@@ -104,14 +104,12 @@ public class DiscussionServlet extends HttpServlet {
       String userEmail = (String) entity.getProperty("userEmail");
 
 
-      //This is where i translate postTitle and postContent if needed
-      if (languageCode != "") {
-        Translation translationTitle = translate.translate(postTitle, Translate.TranslateOption.targetLanguage(languageCode));
-        postTitle = translationTitle.getTranslatedText();
+      //This is where i translate postTitle and postContent and update them
+      Translation translationTitle = translate.translate(postTitle, Translate.TranslateOption.targetLanguage(languageCode));
+      postTitle = translationTitle.getTranslatedText();
 
-        Translation translationContent = translate.translate(postContent, Translate.TranslateOption.targetLanguage(languageCode));
-        postContent = translationContent.getTranslatedText();
-      }
+      Translation translationContent = translate.translate(postContent, Translate.TranslateOption.targetLanguage(languageCode));
+      postContent = translationContent.getTranslatedText();
 
       Post curPost = new Post(postTitle, postContent, postId, postTime, userEmail);
 
