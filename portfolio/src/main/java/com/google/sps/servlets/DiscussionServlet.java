@@ -35,7 +35,7 @@ public class DiscussionServlet extends HttpServlet {
 
     String language = getParameter(request, /* parameter= */ "language", /* default= */ "en");
 
-    ArrayList<Post> allPosts = organizeData(language);
+    ArrayList<Post> allPosts = getPostData(language);
     
     String json = convertToJson(allPosts);
 
@@ -83,7 +83,7 @@ public class DiscussionServlet extends HttpServlet {
     return json;
   }
 
-  private static ArrayList<Post> organizeData(String languageCode) {
+  private ArrayList<Post> getPostData(String languageCode) {
 
     Translate translate = TranslateOptions.getDefaultInstance().getService();
 

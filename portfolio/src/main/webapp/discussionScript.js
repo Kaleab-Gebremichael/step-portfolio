@@ -7,7 +7,7 @@ function checkTranslation(){
 }
 
 
-function displayList(parameter) {
+function displayList(parameter = "") {
   fetch('/discussion?' + parameter).then((response) => response.json()).then((data) => {
 
     //clear out page before loading
