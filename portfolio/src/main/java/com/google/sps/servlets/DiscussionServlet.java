@@ -33,8 +33,7 @@ public class DiscussionServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-    //default language is english if user doesn't ask for translate
-    String language = getParameter(request, "language", "en");
+    String language = getParameter(request, /* parameter= */ "language", /* default= */ "en");
 
     ArrayList<Post> allPosts = organizeData(language);
     
@@ -78,13 +77,13 @@ public class DiscussionServlet extends HttpServlet {
   }
 
 
-  public String convertToJson(ArrayList<Post> data) {
+  private String convertToJson(ArrayList<Post> data) {
     Gson gson = new Gson();
     String json = gson.toJson(data);
     return json;
   }
 
-  public static ArrayList<Post> organizeData(String languageCode) {
+  private static ArrayList<Post> organizeData(String languageCode) {
 
     Translate translate = TranslateOptions.getDefaultInstance().getService();
 
@@ -103,8 +102,6 @@ public class DiscussionServlet extends HttpServlet {
       String postTime = String.valueOf(entity.getProperty("commentTime"));
       String userEmail = (String) entity.getProperty("userEmail");
 
-
-      //This is where i translate postTitle and postContent and update them
       Translation translationTitle = translate.translate(postTitle, Translate.TranslateOption.targetLanguage(languageCode));
       postTitle = translationTitle.getTranslatedText();
 
