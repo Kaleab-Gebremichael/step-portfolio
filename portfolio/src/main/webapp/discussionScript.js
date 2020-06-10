@@ -1,6 +1,17 @@
 
-function displayList() {
-  fetch('/discussion').then((response) => response.json()).then((data) => {
+function checkTranslation(){
+
+  let input = document.getElementById("language");
+  let languageCode = input.options[input.selectedIndex].value;
+  displayList("language=" + languageCode);
+}
+
+
+function displayList(parameter = "") {
+  fetch('/discussion?' + parameter).then((response) => response.json()).then((data) => {
+
+    //clear out page before loading
+    document.getElementById('discussion-container').textContent = '';
 
     let posts = document.createElement('div');
 

@@ -1,0 +1,5 @@
+indexes:
+- kind: Replies
+  properties:
+  - name: postId
+  - name: replyTime
