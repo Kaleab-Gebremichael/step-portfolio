@@ -39,7 +39,7 @@ public class DiscussionServlet extends HttpServlet {
     
     String json = convertToJson(allPosts);
 
-    response.setContentType("application/json;");
+    response.setContentType("application/json; charset=UTF-8");
     response.getWriter().println(json);
   }
 
