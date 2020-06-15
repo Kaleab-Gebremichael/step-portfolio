@@ -1,16 +1,3 @@
-// Copyright 2019 Google LLC
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     https://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
 
 package com.google.sps;
 
@@ -19,7 +6,6 @@ import java.util.Collections;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Set;
-import static java.lang.System.out;
 
 public final class FindMeetingQuery {
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
@@ -42,22 +28,14 @@ public final class FindMeetingQuery {
     ArrayList<TimeRange> allUnavailableTimes = new ArrayList<>();
 
     for (Event event : events){
-      //only if person B or people in the request are involved
       if (validatePerson(event, request)){
         allUnavailableTimes.add(event.getWhen());
       }
     }
 
-    System.out.println("UNSORTED Collection" + allUnavailableTimes);
-
     Collections.sort(allUnavailableTimes, TimeRange.ORDER_BY_START);
 
-    System.out.println("SORTED Collection: " + allUnavailableTimes);
-
     ArrayList<TimeRange> mergedUnavailableTimes = mergeTimeRanges(allUnavailableTimes);
-
-    System.out.println("MERGED Collection: " + mergedUnavailableTimes);
-
     ArrayList<TimeRange> availableTimes = new ArrayList<>();
     
     TimeRange possibleTime = TimeRange.fromStartDuration(-1,-1); //junk value
@@ -67,22 +45,23 @@ public final class FindMeetingQuery {
 
       possibleTime = TimeRange.fromStartEnd(prevEndTime, curTime.start(), false);
 
-      System.out.println("POSSIBLE Time" + possibleTime);
       if (possibleTime.duration() >= request.getDuration()){
-          availableTimes.add(possibleTime);
+        availableTimes.add(possibleTime);
       }
+
       prevEndTime = curTime.end();
     }
 
     //check to see if there's a possible time after the end of the last meeting
     possibleTime = TimeRange.fromStartEnd(prevEndTime, TimeRange.END_OF_DAY, true);
     if (possibleTime.duration() >= request.getDuration()){
-          availableTimes.add(possibleTime);
+      availableTimes.add(possibleTime);
     }
 
     return availableTimes;
   }
 
+  //merges overlapping intervals so that start and end times are clear and consecutive
   public ArrayList<TimeRange> mergeTimeRanges(ArrayList<TimeRange> allUnavailableTimes){
 
     ArrayList<TimeRange> result = new ArrayList<>();
