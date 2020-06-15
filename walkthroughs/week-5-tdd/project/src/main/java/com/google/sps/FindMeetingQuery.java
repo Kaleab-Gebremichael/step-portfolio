@@ -48,6 +48,25 @@ public final class FindMeetingQuery {
   public ArrayList<TimeRange> mergeTimeRanges(ArrayList<TimeRange> allUnavailableTimes){
 
     ArrayList<TimeRange> result = new ArrayList<>();
+
+    for (TimeRange curTime: allUnavailableTimes){
+      TimeRange lastTimeRangeInResult = result.get(result.size() - 1);
+
+      if (result.isEmpty() || !curTime.overlaps(lastTimeRangeInResult) {
+        result.add(curTime);
+      
+      } else if (curTime.overlaps(lastTimeRangeInResult){
+        int newStart = Math.min(lastTimeRangeInResult.start(), curTime.start());
+        int newEnd = Math.max(lastTimeRangeInResult.end(), curTime.end());
+        
+        TimeRange mergedTimeRange = TimeRange.fromStartEnd(newStart, newEnd, true);
+
+        result.remove(result.size() - 1);
+        result.add(mergeTimeRange);
+      }
+
+      return result;
+    }
   }
 
 }
