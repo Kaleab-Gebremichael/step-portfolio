@@ -121,6 +121,9 @@ public class DiscussionServlet extends HttpServlet {
         String replyTime = String.valueOf(cur.getProperty("replyTime"));
         String replyUserEmail = (String) cur.getProperty("userEmail");
 
+        Translation translationReplyContent = translate.translate(replyContent, Translate.TranslateOption.targetLanguage(languageCode));
+        replyContent = translationReplyContent.getTranslatedText();
+
         Reply curReply = new Reply(replyContent, replyTime, replyUserEmail);
 
         curPost.addReply(curReply);
