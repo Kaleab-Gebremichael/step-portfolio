@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Arrays;
 import java.util.ArrayList;
+import static java.lang.System.out;
 
 public final class FindMeetingQuery {
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
@@ -30,9 +31,12 @@ public final class FindMeetingQuery {
     //  4. Start from beginning of day to end and the result will be all the times in this 
     //      merged timeranges that are atleast the requested meeting's duration
 
-    if (events.isEmpty()){
+    if (request.getDuration() > TimeRange.WHOLE_DAY.duration()){
+      return Arrays.asList();
+   
+    } else if (events.isEmpty()){
       return Arrays.asList(TimeRange.WHOLE_DAY);
-    } 
+    }
 
     ArrayList<TimeRange> allUnavailableTimes = new ArrayList<>();
 
@@ -40,17 +44,23 @@ public final class FindMeetingQuery {
       allUnavailableTimes.add(event.getWhen());
     }
 
+    System.out.println("UNSORTED Collection" + allUnavailableTimes);
+
     Collections.sort(allUnavailableTimes, TimeRange.ORDER_BY_START);
+
+    System.out.println("SORTED Collection: " + allUnavailableTimes);
 
     ArrayList<TimeRange> mergedUnavailableTimes = mergeTimeRanges(allUnavailableTimes);
 
+    System.out.println("MERGED Collection: " + mergedUnavailableTimes);
+
     ArrayList<TimeRange> availableTimes = new ArrayList<>();
+    
+    TimeRange possibleTime = TimeRange.fromStartDuration(-1,-1); //junk value
     int prevEndTime = 0;
     
     for (TimeRange curTime: mergedUnavailableTimes){
 
-      TimeRange possibleTime = TimeRange.fromStartDuration(-1,-1); //junk value
-     
       if (availableTimes.isEmpty()) {
         prevEndTime = curTime.start();
         possibleTime = TimeRange.fromStartEnd(TimeRange.START_OF_DAY, curTime.start(), false);
@@ -58,10 +68,16 @@ public final class FindMeetingQuery {
         possibleTime = TimeRange.fromStartEnd(prevEndTime, curTime.start(), false);
       }
 
-      if (possibleTime.duration() > request.getDuration()){
+      System.out.println("POSSIBLE Time" + possibleTime);
+      if (possibleTime.duration() >= request.getDuration()){
           availableTimes.add(possibleTime);
       }
       prevEndTime = curTime.end();
+    }
+
+    possibleTime = TimeRange.fromStartEnd(prevEndTime, TimeRange.END_OF_DAY, true);
+    if (possibleTime.duration() >= request.getDuration()){
+          availableTimes.add(possibleTime);
     }
 
     return availableTimes;
@@ -72,16 +88,18 @@ public final class FindMeetingQuery {
     ArrayList<TimeRange> result = new ArrayList<>();
 
     for (TimeRange curTime: allUnavailableTimes) {
-      TimeRange lastTimeRangeInResult = result.get(result.size() - 1);
+      
 
       if (result.isEmpty() || !curTime.overlaps(result.get(result.size() - 1))) {
         result.add(curTime);
       
-      } else if (curTime.overlaps(lastTimeRangeInResult)) {
+      } else if (curTime.overlaps(result.get(result.size() - 1))) {
+        
+        TimeRange lastTimeRangeInResult = result.get(result.size() - 1);
         int newStart = Math.min(lastTimeRangeInResult.start(), curTime.start());
         int newEnd = Math.max(lastTimeRangeInResult.end(), curTime.end());
         
-        TimeRange mergedTimeRange = TimeRange.fromStartEnd(newStart, newEnd, true);
+        TimeRange mergedTimeRange = TimeRange.fromStartEnd(newStart, newEnd, false);
 
         result.remove(lastTimeRangeInResult);
         result.add(mergedTimeRange);
