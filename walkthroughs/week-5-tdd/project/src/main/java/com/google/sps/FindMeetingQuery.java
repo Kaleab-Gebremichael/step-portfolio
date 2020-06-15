@@ -57,16 +57,11 @@ public final class FindMeetingQuery {
     ArrayList<TimeRange> availableTimes = new ArrayList<>();
     
     TimeRange possibleTime = TimeRange.fromStartDuration(-1,-1); //junk value
-    int prevEndTime = 0;
+    int prevEndTime = TimeRange.START_OF_DAY;  //junk value
     
     for (TimeRange curTime: mergedUnavailableTimes){
 
-      if (availableTimes.isEmpty()) {
-        prevEndTime = curTime.start();
-        possibleTime = TimeRange.fromStartEnd(TimeRange.START_OF_DAY, curTime.start(), false);
-      } else {
-        possibleTime = TimeRange.fromStartEnd(prevEndTime, curTime.start(), false);
-      }
+      possibleTime = TimeRange.fromStartEnd(prevEndTime, curTime.start(), false);
 
       System.out.println("POSSIBLE Time" + possibleTime);
       if (possibleTime.duration() >= request.getDuration()){
