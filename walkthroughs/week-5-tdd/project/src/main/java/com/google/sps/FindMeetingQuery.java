@@ -43,6 +43,25 @@ public final class FindMeetingQuery {
 
     ArrayList<TimeRange> mergedUnavailableTimes = mergeTimeRanges(allUnavailableTimes);
 
+    ArrayList<TimeRange> availableTimes = new ArrayList<>();
+    int prevEndTime;
+    
+    for (TimeRange curTime: mergedUnavailableTimes){
+
+      if (availableTimes.isEmpty()) {
+        TimeRange possibleTime = TimeRange.fromStartEnd(TimeRange.START_OF_DAY, curTime.start(), false);
+      } else {
+        TimeRange possibleTime = TimeRange.fromStartEnd(prevEndTime, curTime.start(), false);
+      }
+
+      if (possibleTime.duration() > request.getDuration()){
+          availableTimes.add(possibleTime);
+      }
+      prevEndTime = curTime.end();
+    }
+
+    return availableTimes;
+
   }
 
   public ArrayList<TimeRange> mergeTimeRanges(ArrayList<TimeRange> allUnavailableTimes){
