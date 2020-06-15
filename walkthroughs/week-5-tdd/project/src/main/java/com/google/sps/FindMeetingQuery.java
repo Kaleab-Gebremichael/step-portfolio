@@ -17,6 +17,7 @@ package com.google.sps;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Arrays;
+import java.util.ArrayList;
 
 public final class FindMeetingQuery {
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
@@ -29,7 +30,7 @@ public final class FindMeetingQuery {
     //  4. Start from beginning of day to end and the result will be all the times in this 
     //      merged timeranges that are atleast the requested meeting's duration
 
-    if (events.empty()){
+    if (events.isEmpty()){
       return Arrays.asList(TimeRange.WHOLE_DAY);
     } 
 
@@ -44,14 +45,17 @@ public final class FindMeetingQuery {
     ArrayList<TimeRange> mergedUnavailableTimes = mergeTimeRanges(allUnavailableTimes);
 
     ArrayList<TimeRange> availableTimes = new ArrayList<>();
-    int prevEndTime;
+    int prevEndTime = 0;
     
     for (TimeRange curTime: mergedUnavailableTimes){
 
+      TimeRange possibleTime = TimeRange.fromStartDuration(-1,-1); //junk value
+     
       if (availableTimes.isEmpty()) {
-        TimeRange possibleTime = TimeRange.fromStartEnd(TimeRange.START_OF_DAY, curTime.start(), false);
+        prevEndTime = curTime.start();
+        possibleTime = TimeRange.fromStartEnd(TimeRange.START_OF_DAY, curTime.start(), false);
       } else {
-        TimeRange possibleTime = TimeRange.fromStartEnd(prevEndTime, curTime.start(), false);
+        possibleTime = TimeRange.fromStartEnd(prevEndTime, curTime.start(), false);
       }
 
       if (possibleTime.duration() > request.getDuration()){
@@ -61,31 +65,30 @@ public final class FindMeetingQuery {
     }
 
     return availableTimes;
-
   }
 
   public ArrayList<TimeRange> mergeTimeRanges(ArrayList<TimeRange> allUnavailableTimes){
 
     ArrayList<TimeRange> result = new ArrayList<>();
 
-    for (TimeRange curTime: allUnavailableTimes){
+    for (TimeRange curTime: allUnavailableTimes) {
       TimeRange lastTimeRangeInResult = result.get(result.size() - 1);
 
-      if (result.isEmpty() || !curTime.overlaps(lastTimeRangeInResult) {
+      if (result.isEmpty() || !curTime.overlaps(result.get(result.size() - 1))) {
         result.add(curTime);
       
-      } else if (curTime.overlaps(lastTimeRangeInResult){
+      } else if (curTime.overlaps(lastTimeRangeInResult)) {
         int newStart = Math.min(lastTimeRangeInResult.start(), curTime.start());
         int newEnd = Math.max(lastTimeRangeInResult.end(), curTime.end());
         
         TimeRange mergedTimeRange = TimeRange.fromStartEnd(newStart, newEnd, true);
 
-        result.remove(result.size() - 1);
-        result.add(mergeTimeRange);
+        result.remove(lastTimeRangeInResult);
+        result.add(mergedTimeRange);
       }
-
-      return result;
     }
+
+    return result;
   }
 
 }
