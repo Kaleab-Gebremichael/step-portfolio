@@ -20,10 +20,6 @@ import java.util.Arrays;
 
 public final class FindMeetingQuery {
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
- /*   if (events.empty()){
-      return Arrays.asList(TimeRange.WHOLE_DAY);
-    } 
- */
 
     //General Outline:
     //  1. Go through each person's events and add it to a list that holds all 
@@ -32,6 +28,10 @@ public final class FindMeetingQuery {
     //  3. Merge overlapping intervals if any so that start/end times are clear
     //  4. Start from beginning of day to end and the result will be all the times in this 
     //      merged timeranges that are atleast the requested meeting's duration
+
+    if (events.empty()){
+      return Arrays.asList(TimeRange.WHOLE_DAY);
+    } 
 
     ArrayList<TimeRange> allUnavailableTimes = new ArrayList<>();
 
