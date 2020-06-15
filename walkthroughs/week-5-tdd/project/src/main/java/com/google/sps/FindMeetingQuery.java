@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Set;
 import static java.lang.System.out;
 
 public final class FindMeetingQuery {
@@ -41,7 +42,10 @@ public final class FindMeetingQuery {
     ArrayList<TimeRange> allUnavailableTimes = new ArrayList<>();
 
     for (Event event : events){
-      allUnavailableTimes.add(event.getWhen());
+      //only if person B or people in the request are involved
+      if (validatePerson(event, request)){
+        allUnavailableTimes.add(event.getWhen());
+      }
     }
 
     System.out.println("UNSORTED Collection" + allUnavailableTimes);
@@ -70,6 +74,7 @@ public final class FindMeetingQuery {
       prevEndTime = curTime.end();
     }
 
+    //check to see if there's a possible time after the end of the last meeting
     possibleTime = TimeRange.fromStartEnd(prevEndTime, TimeRange.END_OF_DAY, true);
     if (possibleTime.duration() >= request.getDuration()){
           availableTimes.add(possibleTime);
@@ -84,7 +89,6 @@ public final class FindMeetingQuery {
 
     for (TimeRange curTime: allUnavailableTimes) {
       
-
       if (result.isEmpty() || !curTime.overlaps(result.get(result.size() - 1))) {
         result.add(curTime);
       
@@ -104,4 +108,16 @@ public final class FindMeetingQuery {
     return result;
   }
 
+  //checks to make sure at least one of the people in the request has an event
+  public boolean validatePerson(Event event, MeetingRequest request){
+    Set<String> eventAttendees = event.getAttendees();
+
+    for (String attendee : request.getAttendees()) {
+      if (eventAttendees.contains(attendee)){
+        return true;
+      }
+    }
+
+    return false;
+  }
 }
