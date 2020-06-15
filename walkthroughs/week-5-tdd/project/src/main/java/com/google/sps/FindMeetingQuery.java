@@ -15,9 +15,39 @@
 package com.google.sps;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Arrays;
 
 public final class FindMeetingQuery {
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
-    throw new UnsupportedOperationException("TODO: Implement this method.");
+ /*   if (events.empty()){
+      return Arrays.asList(TimeRange.WHOLE_DAY);
+    } 
+ */
+
+    //General Outline:
+    //  1. Go through each person's events and add it to a list that holds all 
+    //      times when people can't meet
+    //  2. Sort that list by start time
+    //  3. Merge overlapping intervals if any so that start/end times are clear
+    //  4. Start from beginning of day to end and the result will be all the times in this 
+    //      merged timeranges that are atleast the requested meeting's duration
+
+    ArrayList<TimeRange> allUnavailableTimes = new ArrayList<>();
+
+    for (Event event : events){
+      allUnavailableTimes.add(event.getWhen());
+    }
+
+    Collections.sort(allUnavailableTimes, TimeRange.ORDER_BY_START);
+
+    ArrayList<TimeRange> mergedUnavailableTimes = mergeTimeRanges(allUnavailableTimes);
+
   }
+
+  public ArrayList<TimeRange> mergeTimeRanges(ArrayList<TimeRange> allUnavailableTimes){
+
+    ArrayList<TimeRange> result = new ArrayList<>();
+  }
+
 }
