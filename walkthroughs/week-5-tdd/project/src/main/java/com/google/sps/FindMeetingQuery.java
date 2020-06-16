@@ -19,10 +19,16 @@ public final class FindMeetingQuery {
     //      in this merged timeranges that are atleast the requested meeting's duration
 
     ArrayList<TimeRange> allUnavailableTimes = new ArrayList<>();
+    // Set<String> eventAttendees = event.getAttendees();
+    // eventAttendees.retainAll(request.getAttendees()); //find intersection between these two sets
 
     for (Event event : events){
-      if (validatePerson(event, request)){
+      // if (validatePerson(event, request)){
+        Set<String> eventAttendees = event.getAttendees();
+        if eventAttendees.retainAll(request.getAttendees()){
+          
         allUnavailableTimes.add(event.getWhen());
+        }
       }
     }
 
