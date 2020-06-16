@@ -20,9 +20,6 @@ public final class FindMeetingQuery {
 
     if (request.getDuration() > TimeRange.WHOLE_DAY.duration()){
       return Arrays.asList();
-   
-    } else if (events.isEmpty()){
-      return Arrays.asList(TimeRange.WHOLE_DAY);
     }
 
     ArrayList<TimeRange> allUnavailableTimes = new ArrayList<>();
@@ -38,8 +35,8 @@ public final class FindMeetingQuery {
     ArrayList<TimeRange> mergedUnavailableTimes = mergeTimeRanges(allUnavailableTimes);
     ArrayList<TimeRange> availableTimes = new ArrayList<>();
     
-    TimeRange possibleTime = TimeRange.fromStartDuration(-1,-1); //junk value
-    int prevEndTime = TimeRange.START_OF_DAY;  //junk value
+    TimeRange possibleTime;
+    int prevEndTime = TimeRange.START_OF_DAY;
     
     for (TimeRange curTime: mergedUnavailableTimes){
 
@@ -71,7 +68,7 @@ public final class FindMeetingQuery {
       if (result.isEmpty() || !curTime.overlaps(result.get(result.size() - 1))) {
         result.add(curTime);
       
-      } else if (curTime.overlaps(result.get(result.size() - 1))) {
+      } else {
         
         TimeRange lastTimeRangeInResult = result.get(result.size() - 1);
         int newStart = Math.min(lastTimeRangeInResult.start(), curTime.start());
@@ -87,7 +84,7 @@ public final class FindMeetingQuery {
     return result;
   }
 
-  //checks to make sure at least one of the people in the request has an event
+  //checks to make sure at least one of the people in the request is in the event
   public boolean validatePerson(Event event, MeetingRequest request){
     Set<String> eventAttendees = event.getAttendees();
 
