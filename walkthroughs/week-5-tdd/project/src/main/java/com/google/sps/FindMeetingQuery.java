@@ -23,13 +23,10 @@ public final class FindMeetingQuery {
     ArrayList<TimeRange> allUnavailableTimes = new ArrayList<>();
 
     for (Event event : events){
-      if (validatePerson(event, request)){
+      if (!isEventBlockingRequest(event, request)){
         allUnavailableTimes.add(event.getWhen());
       }
-      
     }
-
-    Collections.sort(allUnavailableTimes, TimeRange.ORDER_BY_START);
 
     ArrayList<TimeRange> mergedUnavailableTimes = mergeTimeRanges(allUnavailableTimes);
     ArrayList<TimeRange> availableTimes = new ArrayList<>();
@@ -60,6 +57,8 @@ public final class FindMeetingQuery {
   //merges overlapping intervals so that start and end times are clear and consecutive
   public ArrayList<TimeRange> mergeTimeRanges(ArrayList<TimeRange> allUnavailableTimes){
 
+    Collections.sort(allUnavailableTimes, TimeRange.ORDER_BY_START);
+
     ArrayList<TimeRange> result = new ArrayList<>();
 
     for (TimeRange curTime: allUnavailableTimes) {
@@ -85,12 +84,12 @@ public final class FindMeetingQuery {
   }
 
   //checks to make sure at least one person in the request is in the event
-  public boolean validatePerson(Event event, MeetingRequest request){
+  public boolean isEventBlockingRequest(Event event, MeetingRequest request){
     Set<String> eventAttendees = new HashSet<>(event.getAttendees());
 
     //find intersection between these two sets
     eventAttendees.retainAll(request.getAttendees());
 
-    return !eventAttendees.isEmpty();
+    return eventAttendees.isEmpty();
   }
 }
