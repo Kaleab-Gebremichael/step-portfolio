@@ -6,6 +6,8 @@ import java.util.Collections;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Set;
+import java.util.HashSet;
+
 
 public final class FindMeetingQuery {
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
@@ -19,17 +21,12 @@ public final class FindMeetingQuery {
     //      in this merged timeranges that are atleast the requested meeting's duration
 
     ArrayList<TimeRange> allUnavailableTimes = new ArrayList<>();
-    // Set<String> eventAttendees = event.getAttendees();
-    // eventAttendees.retainAll(request.getAttendees()); //find intersection between these two sets
 
     for (Event event : events){
-      // if (validatePerson(event, request)){
-        Set<String> eventAttendees = event.getAttendees();
-        if eventAttendees.retainAll(request.getAttendees()){
-          
+      if (validatePerson(event, request)){
         allUnavailableTimes.add(event.getWhen());
-        }
       }
+      
     }
 
     Collections.sort(allUnavailableTimes, TimeRange.ORDER_BY_START);
@@ -87,16 +84,13 @@ public final class FindMeetingQuery {
     return result;
   }
 
-  //checks to make sure at least one of the people in the request is in the event
+  //checks to make sure at least one person in the request is in the event
   public boolean validatePerson(Event event, MeetingRequest request){
-    Set<String> eventAttendees = event.getAttendees();
+    Set<String> eventAttendees = new HashSet<>(event.getAttendees());
 
-    for (String attendee : request.getAttendees()) {
-      if (eventAttendees.contains(attendee)){
-        return true;
-      }
-    }
+    //find intersection between these two sets
+    eventAttendees.retainAll(request.getAttendees());
 
-    return false;
+    return !eventAttendees.isEmpty();
   }
 }
