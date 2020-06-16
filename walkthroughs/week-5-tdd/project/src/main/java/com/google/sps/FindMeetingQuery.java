@@ -15,12 +15,8 @@ public final class FindMeetingQuery {
     //      times when people can't meet
     //  2. Sort that list by start time
     //  3. Merge overlapping intervals if any so that start/end times are clear
-    //  4. Start from beginning of day to end and the result will be all the times in this 
-    //      merged timeranges that are atleast the requested meeting's duration
-
-    if (request.getDuration() > TimeRange.WHOLE_DAY.duration()){
-      return Arrays.asList();
-    }
+    //  4. Start from beginning of day to end and the result will be all the times
+    //      in this merged timeranges that are atleast the requested meeting's duration
 
     ArrayList<TimeRange> allUnavailableTimes = new ArrayList<>();
 
@@ -65,6 +61,7 @@ public final class FindMeetingQuery {
 
     for (TimeRange curTime: allUnavailableTimes) {
       
+      //if it doesn't overlap with the last timerange, it can simply be added
       if (result.isEmpty() || !curTime.overlaps(result.get(result.size() - 1))) {
         result.add(curTime);
       
