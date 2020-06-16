@@ -10,15 +10,22 @@ import java.util.HashSet;
 
 
 public final class FindMeetingQuery {
-  public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
 
-    //General Outline:
-    //  1. Go through each person's events and add it to a list that holds all 
-    //      times when people can't meet
-    //  2. Sort that list by start time
-    //  3. Merge overlapping intervals if any so that start/end times are clear
-    //  4. Start from beginning of day to end and the result will be all the times
-    //      in this merged timeranges that are atleast the requested meeting's duration
+ /**
+  * Given the meeting information, this method return the times when a meeting could happen.
+  * General Outline:
+  *  1. Go through each person's events and add it to a list that holds all 
+  *      times when people can't meet
+  *  2. Sort that list by start time
+  *  3. Merge overlapping intervals if any so that start/end times are clear
+  *  4. Start from beginning of day to end and the result will be all the times
+  *      in this merged timeranges that are atleast the requested meeting's duration
+  *
+  * @param  events  A collection of events during the day for people
+  * @param  request The meeting request that includes the people and the duration.
+  * @return  Collection of Timeranges when the meeting could happen.
+  */
+  public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
 
     ArrayList<TimeRange> allUnavailableTimes = new ArrayList<>();
 
@@ -54,7 +61,13 @@ public final class FindMeetingQuery {
     return availableTimes;
   }
 
-  //merges overlapping intervals so that start and end times are clear and consecutive
+ /**
+  * Given a list of Timeranges, this method merges overlapping intervals so that
+  * they are clear and consecutive.
+  *
+  * @param  allUnavailableTimes  A list of Timeranges.
+  * @return   List of Timeranges that are merged and consecutive.
+  */
   public ArrayList<TimeRange> mergeTimeRanges(ArrayList<TimeRange> allUnavailableTimes){
 
     Collections.sort(allUnavailableTimes, TimeRange.ORDER_BY_START);
@@ -83,7 +96,14 @@ public final class FindMeetingQuery {
     return result;
   }
 
-  //checks to make sure at least one person in the request is in the event
+ /**
+  * Given an event and a meeting request, this method returns a boolean to make 
+  * sure at least one  person in the request is in the event.
+  *
+  * @param  event  A list of Timeranges.
+  * @param  request  A list of Timeranges.
+  * @return true if an event is blocking a request, false otherwise
+  */
   public boolean isEventBlockingRequest(Event event, MeetingRequest request){
     Set<String> eventAttendees = new HashSet<>(event.getAttendees());
 
