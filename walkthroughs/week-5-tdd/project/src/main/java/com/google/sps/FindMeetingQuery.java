@@ -113,3 +113,14 @@ public final class FindMeetingQuery {
     return eventAttendees.isEmpty();
   }
 }
+
+ /**
+  * Notes for the optional attendees:
+  *  1. if optional attendee can't make the meeting at all, treat them like they don't exist
+  *  2. if they can make it to the meeting, treat them like you'd normally treat mandatory ones
+  *     even if they decrease the amount of available times
+  *  3. if there's only one timeslot available and the optional attendee can't make it then, you can ignore them
+  *     otherwise you'd be left with zero available times
+  *  4. if there are no mandatory attendees, treat optionals like mandatory ones and return 
+  *     every available time
+  */
