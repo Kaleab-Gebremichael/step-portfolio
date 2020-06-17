@@ -41,11 +41,16 @@ public final class FindMeetingQuery {
       }
     }
 
-    
     ArrayList<TimeRange> unavailableTimes;
 
     if (optionalUnavailableTimes.isEmpty()){
-
+      unavailableTimes = mandatoryUnavailableTimes;
+    } else if (mandatoryUnavailableTimes.isEmpty()){
+      unavailableTimes = optionalUnavailableTimes;
+    } else {
+      unavailableTimes = new ArrayList<>();
+      unavailableTimes.addAll(mandatoryUnavailableTimes);
+      unavailableTimes.addAll(optionalUnavailableTimes);
     }
 
     ArrayList<TimeRange> mergedUnavailableTimes = mergeTimeRanges(unavailableTimes);
