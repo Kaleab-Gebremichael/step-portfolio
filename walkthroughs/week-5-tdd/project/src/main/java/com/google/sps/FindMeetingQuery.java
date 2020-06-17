@@ -29,6 +29,7 @@ public final class FindMeetingQuery {
 
     ArrayList<TimeRange> allUnavailableTimes = new ArrayList<>();
 
+    //this can be a separate helper method and can add the optional 
     for (Event event : events){
       if (!isEventBlockingRequest(event, request)){
         allUnavailableTimes.add(event.getWhen());
@@ -36,27 +37,7 @@ public final class FindMeetingQuery {
     }
 
     ArrayList<TimeRange> mergedUnavailableTimes = mergeTimeRanges(allUnavailableTimes);
-    ArrayList<TimeRange> availableTimes = new ArrayList<>();
-    
-    TimeRange possibleTime;
-    int prevEndTime = TimeRange.START_OF_DAY;
-    
-    for (TimeRange curTime: mergedUnavailableTimes){
-
-      possibleTime = TimeRange.fromStartEnd(prevEndTime, curTime.start(), false);
-
-      if (possibleTime.duration() >= request.getDuration()){
-        availableTimes.add(possibleTime);
-      }
-
-      prevEndTime = curTime.end();
-    }
-
-    //check to see if there's a possible time after the end of the last meeting
-    possibleTime = TimeRange.fromStartEnd(prevEndTime, TimeRange.END_OF_DAY, true);
-    if (possibleTime.duration() >= request.getDuration()){
-      availableTimes.add(possibleTime);
-    }
+    ArrayList<TimeRange> availableTimes = findAvailableTimes(mergedUnavailableTimes, request);
 
     return availableTimes;
   }
@@ -94,6 +75,31 @@ public final class FindMeetingQuery {
     }
 
     return result;
+  }
+
+  public ArrayList<TimeRange> findAvailableTimes(ArrayList<TimeRange> unavailableTimes, MeetingRequest request) {
+    ArrayList<TimeRange> availableTimes = new ArrayList<>();
+    TimeRange possibleTime;
+    int prevEndTime = TimeRange.START_OF_DAY;
+    
+    for (TimeRange curTime: unavailableTimes){
+
+      possibleTime = TimeRange.fromStartEnd(prevEndTime, curTime.start(), false);
+
+      if (possibleTime.duration() >= request.getDuration()){
+        availableTimes.add(possibleTime);
+      }
+
+      prevEndTime = curTime.end();
+    }
+
+    //check to see if there's a possible time after the end of the last meeting
+    possibleTime = TimeRange.fromStartEnd(prevEndTime, TimeRange.END_OF_DAY, true);
+    if (possibleTime.duration() >= request.getDuration()){
+      availableTimes.add(possibleTime);
+    }
+
+    return availableTimes;
   }
 
  /**
