@@ -102,6 +102,14 @@ public final class FindMeetingQuery {
     return result;
   }
 
+ /**
+  * Given a list of unavailable timeranges and a meeting request, this method 
+  * finds available timeranges to meet in .
+  *
+  * @param  unavailableTimes  A list of unavalable timeranges.
+  * @param  request  A meeting request.
+  * @return List of timeranges when a meeting could happen.
+  */
   public ArrayList<TimeRange> findAvailableTimes(ArrayList<TimeRange> unavailableTimes, MeetingRequest request) {
     ArrayList<TimeRange> availableTimes = new ArrayList<>();
     TimeRange possibleTime;
@@ -132,8 +140,9 @@ public final class FindMeetingQuery {
   * sure at least one  person in the request is in the event.
   *
   * @param  event  A list of Timeranges.
-  * @param  request  A list of Timeranges.
-  * @return true if an event is blocking a request, false otherwise
+  * @param  request  A meeting request.
+  * @param  mandatory  A boolean indicating whether even is from a mandatory/optional attendee
+  * @return true if an event is blocking a request, false otherwise.
   */
   public boolean isEventBlockingRequest(Event event, MeetingRequest request, Boolean mandatory){
     
@@ -148,14 +157,3 @@ public final class FindMeetingQuery {
     return eventAttendees.isEmpty();
   }
 }
-
- /**
-  * Notes for the optional attendees:
-  *  1. if optional attendee can't make the meeting at all, treat them like they don't exist
-  *  2. if they can make it to the meeting, treat them like you'd normally treat mandatory ones
-  *     even if they decrease the amount of available times
-  *  3. if there's only one timeslot available and the optional attendee can't make it then, you can ignore them
-  *     otherwise you'd be left with zero available times
-  *  4. if there are no mandatory attendees, treat optionals like mandatory ones and return 
-  *     every available time
-  */
