@@ -41,17 +41,26 @@ public final class FindMeetingQuery {
       }
     }
 
+    // System.out.println("OPTIONAL UNAVAILABLE Time" + optionalUnavailableTimes);
+    // System.out.println("MANDATORY UNAVAILABLE Time" + mandatoryUnavailableTimes);
+
     ArrayList<TimeRange> unavailableTimes;
 
-    if (optionalUnavailableTimes.isEmpty()){
-      unavailableTimes = mandatoryUnavailableTimes;
-    } else if (mandatoryUnavailableTimes.isEmpty()){
+    if (!optionalUnavailableTimes.isEmpty() && mandatoryUnavailableTimes.isEmpty()){
       unavailableTimes = optionalUnavailableTimes;
     } else {
-      unavailableTimes = new ArrayList<>();
-      unavailableTimes.addAll(mandatoryUnavailableTimes);
-      unavailableTimes.addAll(optionalUnavailableTimes);
+      unavailableTimes = mandatoryUnavailableTimes;
     }
+
+    // if (optionalUnavailableTimes.isEmpty()){
+    //   unavailableTimes = mandatoryUnavailableTimes;
+    // } else if (mandatoryUnavailableTimes.isEmpty()){
+    //   unavailableTimes = optionalUnavailableTimes;
+    // } else {
+    //   unavailableTimes = new ArrayList<>();
+    //   unavailableTimes.addAll(mandatoryUnavailableTimes);
+    //   unavailableTimes.addAll(optionalUnavailableTimes);
+    // }
 
     ArrayList<TimeRange> mergedUnavailableTimes = mergeTimeRanges(unavailableTimes);
     ArrayList<TimeRange> availableTimes = findAvailableTimes(mergedUnavailableTimes, request);
