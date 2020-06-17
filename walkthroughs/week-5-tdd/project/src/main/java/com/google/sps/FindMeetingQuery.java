@@ -27,16 +27,28 @@ public final class FindMeetingQuery {
   */
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
 
-    ArrayList<TimeRange> allUnavailableTimes = new ArrayList<>();
+    ArrayList<TimeRange> mandatoryUnavailableTimes = new ArrayList<>();
+    ArrayList<TimeRange> optionalUnavailableTimes = new ArrayList<>();
 
-    //this can be a separate helper method and can add the optional 
     for (Event event : events){
-      if (!isEventBlockingRequest(event, request)){
-        allUnavailableTimes.add(event.getWhen());
+
+      if (!isEventBlockingRequest(event, request, true)){
+        mandatoryUnavailableTimes.add(event.getWhen());
+      }
+
+      if(!isEventBlockingRequest(event, request, false)){
+        optionalUnavailableTimes.add(event.getWhen());
       }
     }
 
-    ArrayList<TimeRange> mergedUnavailableTimes = mergeTimeRanges(allUnavailableTimes);
+    
+    ArrayList<TimeRange> unavailableTimes;
+
+    if (optionalUnavailableTimes.isEmpty()){
+
+    }
+
+    ArrayList<TimeRange> mergedUnavailableTimes = mergeTimeRanges(unavailableTimes);
     ArrayList<TimeRange> availableTimes = findAvailableTimes(mergedUnavailableTimes, request);
 
     return availableTimes;
@@ -110,11 +122,15 @@ public final class FindMeetingQuery {
   * @param  request  A list of Timeranges.
   * @return true if an event is blocking a request, false otherwise
   */
-  public boolean isEventBlockingRequest(Event event, MeetingRequest request){
+  public boolean isEventBlockingRequest(Event event, MeetingRequest request, Boolean mandatory){
+    
     Set<String> eventAttendees = new HashSet<>(event.getAttendees());
-
-    //find intersection between these two sets
-    eventAttendees.retainAll(request.getAttendees());
+    
+    if (mandatory){
+      eventAttendees.retainAll(request.getAttendees());
+    } else {
+      eventAttendees.retainAll(request.getOptionalAttendees());
+    }
 
     return eventAttendees.isEmpty();
   }
