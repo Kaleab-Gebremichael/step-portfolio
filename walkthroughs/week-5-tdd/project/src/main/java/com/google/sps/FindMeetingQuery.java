@@ -41,18 +41,19 @@ public final class FindMeetingQuery {
       }
     }
 
-    ArrayList<TimeRange> unavailableTimes;
-    boolean combinedUnavailableTimes = false;
+    ArrayList<TimeRange> allUnavailableTimes;
+    boolean combinedOptionalMandatoryTimes = false;
 
     if (mandatoryUnavailableTimes.isEmpty()) {
-      unavailableTimes = optionalUnavailableTimes;
+      allUnavailableTimes = optionalUnavailableTimes;
     } else if (optionalUnavailableTimes.isEmpty()) {
-      unavailableTimes = mandatoryUnavailableTimes;
+      allUnavailableTimes = mandatoryUnavailableTimes;
     } else {
-      unavailableTimes = new ArrayList<>();
-      unavailableTimes.addAll(mandatoryUnavailableTimes);
-      unavailableTimes.addAll(optionalUnavailableTimes);
-      combinedUnavailableTimes = true;
+      allUnavailableTimes = new ArrayList<>();
+      allUnavailableTimes.addAll(mandatoryUnavailableTimes);
+      allUnavailableTimes.addAll(optionalUnavailableTimes);
+
+      combinedOptionalMandatoryTimes = true;
     }
 
     ArrayList<TimeRange> mergedUnavailableTimes = mergeTimeRanges(unavailableTimes);
@@ -60,7 +61,7 @@ public final class FindMeetingQuery {
     ArrayList<TimeRange> availableTimes = findAvailableTimes(mergedUnavailableTimes, request);
 
     //test to see if atleast the mandatory ones can meet
-    if (availableTimes.isEmpty() && combinedUnavailableTimes) {
+    if (availableTimes.isEmpty() && combinedOptionalMandatoryTimes) {
       availableTimes = findAvailableTimes(mandatoryUnavailableTimes, request);
     }
 
@@ -144,7 +145,7 @@ public final class FindMeetingQuery {
   * @param  mandatory  A boolean indicating whether even is from a mandatory/optional attendee
   * @return true if an event is blocking a request, false otherwise.
   */
-  public boolean isEventBlockingRequest(Event event, MeetingRequest request, Boolean mandatory){
+  public boolean isEventBlockingRequest(Event event, MeetingRequest request, Boolean mandatory) {
     
     Set<String> eventAttendees = new HashSet<>(event.getAttendees());
     
