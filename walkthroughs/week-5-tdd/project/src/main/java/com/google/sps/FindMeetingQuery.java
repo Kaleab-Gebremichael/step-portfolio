@@ -32,11 +32,11 @@ public final class FindMeetingQuery {
 
     for (Event event : events) {
 
-      if (!isEventBlockingRequest(event, request, true)) {
+      if (!isEventBlockingRequest(event, request, /* mandatory= */ true)) {
         mandatoryUnavailableTimes.add(event.getWhen());
       }
 
-      if(!isEventBlockingRequest(event, request, false)) {
+      if(!isEventBlockingRequest(event, request, /* mandatory= */ false)) {
         optionalUnavailableTimes.add(event.getWhen());
       }
     }
@@ -142,7 +142,7 @@ public final class FindMeetingQuery {
   *
   * @param  event  A list of Timeranges.
   * @param  request  A meeting request.
-  * @param  mandatory  A boolean indicating whether even is from a mandatory/optional attendee
+  * @param  mandatory  A boolean indicating whether the event is from a mandatory/optional attendee
   * @return true if an event is blocking a request, false otherwise.
   */
   public boolean isEventBlockingRequest(Event event, MeetingRequest request, Boolean mandatory) {
