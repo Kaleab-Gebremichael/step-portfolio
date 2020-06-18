@@ -107,7 +107,7 @@ public final class FindMeetingQuery {
   * Given a list of unavailable timeranges and a meeting request, this method 
   * finds available timeranges to meet in .
   *
-  * @param  unavailableTimes  A list of unavalable timeranges.
+  * @param  unavailableTimes  A sorted list of unavailable timeranges that don't overlap.
   * @param  request  A meeting request.
   * @return List of timeranges when a meeting could happen.
   */
