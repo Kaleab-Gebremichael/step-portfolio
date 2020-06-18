@@ -30,13 +30,13 @@ public final class FindMeetingQuery {
     ArrayList<TimeRange> mandatoryUnavailableTimes = new ArrayList<>();
     ArrayList<TimeRange> optionalUnavailableTimes = new ArrayList<>();
 
-    for (Event event : events){
+    for (Event event : events) {
 
-      if (!isEventBlockingRequest(event, request, true)){
+      if (!isEventBlockingRequest(event, request, true)) {
         mandatoryUnavailableTimes.add(event.getWhen());
       }
 
-      if(!isEventBlockingRequest(event, request, false)){
+      if(!isEventBlockingRequest(event, request, false)) {
         optionalUnavailableTimes.add(event.getWhen());
       }
     }
@@ -44,9 +44,9 @@ public final class FindMeetingQuery {
     ArrayList<TimeRange> unavailableTimes;
     boolean combinedUnavailableTimes = false;
 
-    if (mandatoryUnavailableTimes.isEmpty()){
+    if (mandatoryUnavailableTimes.isEmpty()) {
       unavailableTimes = optionalUnavailableTimes;
-    } else if (optionalUnavailableTimes.isEmpty()){
+    } else if (optionalUnavailableTimes.isEmpty()) {
       unavailableTimes = mandatoryUnavailableTimes;
     } else {
       unavailableTimes = new ArrayList<>();
@@ -60,7 +60,7 @@ public final class FindMeetingQuery {
     ArrayList<TimeRange> availableTimes = findAvailableTimes(mergedUnavailableTimes, request);
 
     //test to see if atleast the mandatory ones can meet
-    if (availableTimes.isEmpty() && combinedUnavailableTimes){
+    if (availableTimes.isEmpty() && combinedUnavailableTimes) {
       availableTimes = findAvailableTimes(mandatoryUnavailableTimes, request);
     }
 
@@ -74,7 +74,7 @@ public final class FindMeetingQuery {
   * @param  allUnavailableTimes  A list of Timeranges.
   * @return   List of Timeranges that are merged and consecutive.
   */
-  public ArrayList<TimeRange> mergeTimeRanges(ArrayList<TimeRange> allUnavailableTimes){
+  public ArrayList<TimeRange> mergeTimeRanges(ArrayList<TimeRange> allUnavailableTimes) {
 
     Collections.sort(allUnavailableTimes, TimeRange.ORDER_BY_START);
 
@@ -115,11 +115,11 @@ public final class FindMeetingQuery {
     TimeRange possibleTime;
     int prevEndTime = TimeRange.START_OF_DAY;
     
-    for (TimeRange curTime: unavailableTimes){
+    for (TimeRange curTime: unavailableTimes) {
 
       possibleTime = TimeRange.fromStartEnd(prevEndTime, curTime.start(), false);
 
-      if (possibleTime.duration() >= request.getDuration()){
+      if (possibleTime.duration() >= request.getDuration()) {
         availableTimes.add(possibleTime);
       }
 
@@ -128,7 +128,7 @@ public final class FindMeetingQuery {
 
     //check to see if there's a possible time after the end of the last meeting
     possibleTime = TimeRange.fromStartEnd(prevEndTime, TimeRange.END_OF_DAY, true);
-    if (possibleTime.duration() >= request.getDuration()){
+    if (possibleTime.duration() >= request.getDuration()) {
       availableTimes.add(possibleTime);
     }
 
@@ -148,7 +148,7 @@ public final class FindMeetingQuery {
     
     Set<String> eventAttendees = new HashSet<>(event.getAttendees());
     
-    if (mandatory){
+    if (mandatory) {
       eventAttendees.retainAll(request.getAttendees());
     } else {
       eventAttendees.retainAll(request.getOptionalAttendees());
