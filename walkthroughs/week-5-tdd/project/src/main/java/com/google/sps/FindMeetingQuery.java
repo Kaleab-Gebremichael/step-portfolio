@@ -42,7 +42,7 @@ public final class FindMeetingQuery {
     }
 
     ArrayList<TimeRange> allUnavailableTimes;
-    boolean combinedOptionalMandatoryTimes = false;
+    boolean combinedOptionalMandatory = false;
 
     if (mandatoryUnavailableTimes.isEmpty()) {
       allUnavailableTimes = optionalUnavailableTimes;
@@ -53,7 +53,7 @@ public final class FindMeetingQuery {
       allUnavailableTimes.addAll(mandatoryUnavailableTimes);
       allUnavailableTimes.addAll(optionalUnavailableTimes);
 
-      combinedOptionalMandatoryTimes = true;
+      combinedOptionalMandatory = true;
     }
 
     ArrayList<TimeRange> mergedUnavailableTimes = mergeTimeRanges(unavailableTimes);
@@ -61,7 +61,7 @@ public final class FindMeetingQuery {
     ArrayList<TimeRange> availableTimes = findAvailableTimes(mergedUnavailableTimes, request);
 
     //test to see if atleast the mandatory ones can meet
-    if (availableTimes.isEmpty() && combinedOptionalMandatoryTimes) {
+    if (availableTimes.isEmpty() && combinedOptionalMandatory) {
       availableTimes = findAvailableTimes(mandatoryUnavailableTimes, request);
     }
 
