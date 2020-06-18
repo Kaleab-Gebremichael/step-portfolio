@@ -56,7 +56,7 @@ public final class FindMeetingQuery {
       combinedOptionalMandatory = true;
     }
 
-    ArrayList<TimeRange> mergedUnavailableTimes = mergeTimeRanges(unavailableTimes);
+    ArrayList<TimeRange> mergedUnavailableTimes = mergeTimeRanges(allUnavailableTimes);
 
     ArrayList<TimeRange> availableTimes = findAvailableTimes(mergedUnavailableTimes, request);
 
