@@ -27,35 +27,42 @@ public final class FindMeetingQuery {
   */
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
 
-    ArrayList<TimeRange> allUnavailableTimes = new ArrayList<>();
+    ArrayList<TimeRange> mandatoryUnavailableTimes = new ArrayList<>();
+    ArrayList<TimeRange> optionalUnavailableTimes = new ArrayList<>();
 
-    for (Event event : events){
-      if (!isEventBlockingRequest(event, request)){
-        allUnavailableTimes.add(event.getWhen());
+    for (Event event : events) {
+
+      if (!isEventBlockingRequest(event, request, /* mandatory= */ true)) {
+        mandatoryUnavailableTimes.add(event.getWhen());
+      }
+
+      if(!isEventBlockingRequest(event, request, /* mandatory= */ false)) {
+        optionalUnavailableTimes.add(event.getWhen());
       }
     }
 
-    ArrayList<TimeRange> mergedUnavailableTimes = mergeTimeRanges(allUnavailableTimes);
-    ArrayList<TimeRange> availableTimes = new ArrayList<>();
-    
-    TimeRange possibleTime;
-    int prevEndTime = TimeRange.START_OF_DAY;
-    
-    for (TimeRange curTime: mergedUnavailableTimes){
+    ArrayList<TimeRange> allUnavailableTimes;
+    boolean combinedOptionalMandatory = false;
 
-      possibleTime = TimeRange.fromStartEnd(prevEndTime, curTime.start(), false);
+    if (mandatoryUnavailableTimes.isEmpty()) {
+      allUnavailableTimes = optionalUnavailableTimes;
+    } else if (optionalUnavailableTimes.isEmpty()) {
+      allUnavailableTimes = mandatoryUnavailableTimes;
+    } else {
+      allUnavailableTimes = new ArrayList<>();
+      allUnavailableTimes.addAll(mandatoryUnavailableTimes);
+      allUnavailableTimes.addAll(optionalUnavailableTimes);
 
-      if (possibleTime.duration() >= request.getDuration()){
-        availableTimes.add(possibleTime);
-      }
-
-      prevEndTime = curTime.end();
+      combinedOptionalMandatory = true;
     }
 
-    //check to see if there's a possible time after the end of the last meeting
-    possibleTime = TimeRange.fromStartEnd(prevEndTime, TimeRange.END_OF_DAY, true);
-    if (possibleTime.duration() >= request.getDuration()){
-      availableTimes.add(possibleTime);
+    ArrayList<TimeRange> mergedUnavailableTimes = mergeTimeRanges(unavailableTimes);
+
+    ArrayList<TimeRange> availableTimes = findAvailableTimes(mergedUnavailableTimes, request);
+
+    //test to see if atleast the mandatory ones can meet
+    if (availableTimes.isEmpty() && combinedOptionalMandatory) {
+      availableTimes = findAvailableTimes(mandatoryUnavailableTimes, request);
     }
 
     return availableTimes;
@@ -68,7 +75,7 @@ public final class FindMeetingQuery {
   * @param  allUnavailableTimes  A list of Timeranges.
   * @return   List of Timeranges that are merged and consecutive.
   */
-  public ArrayList<TimeRange> mergeTimeRanges(ArrayList<TimeRange> allUnavailableTimes){
+  public ArrayList<TimeRange> mergeTimeRanges(ArrayList<TimeRange> allUnavailableTimes) {
 
     Collections.sort(allUnavailableTimes, TimeRange.ORDER_BY_START);
 
@@ -97,18 +104,56 @@ public final class FindMeetingQuery {
   }
 
  /**
+  * Given a list of unavailable timeranges and a meeting request, this method 
+  * finds available timeranges to meet in .
+  *
+  * @param  unavailableTimes  A sorted list of unavailable timeranges that don't overlap.
+  * @param  request  A meeting request.
+  * @return List of timeranges when a meeting could happen.
+  */
+  public ArrayList<TimeRange> findAvailableTimes(ArrayList<TimeRange> unavailableTimes, MeetingRequest request) {
+    ArrayList<TimeRange> availableTimes = new ArrayList<>();
+    TimeRange possibleTime;
+    int prevEndTime = TimeRange.START_OF_DAY;
+    
+    for (TimeRange curTime: unavailableTimes) {
+
+      possibleTime = TimeRange.fromStartEnd(prevEndTime, curTime.start(), false);
+
+      if (possibleTime.duration() >= request.getDuration()) {
+        availableTimes.add(possibleTime);
+      }
+
+      prevEndTime = curTime.end();
+    }
+
+    //check to see if there's a possible time after the end of the last meeting
+    possibleTime = TimeRange.fromStartEnd(prevEndTime, TimeRange.END_OF_DAY, true);
+    if (possibleTime.duration() >= request.getDuration()) {
+      availableTimes.add(possibleTime);
+    }
+
+    return availableTimes;
+  }
+
+ /**
   * Given an event and a meeting request, this method returns a boolean to make 
   * sure at least one  person in the request is in the event.
   *
   * @param  event  A list of Timeranges.
-  * @param  request  A list of Timeranges.
-  * @return true if an event is blocking a request, false otherwise
+  * @param  request  A meeting request.
+  * @param  mandatory  A boolean indicating whether the event is from a mandatory/optional attendee
+  * @return true if an event is blocking a request, false otherwise.
   */
-  public boolean isEventBlockingRequest(Event event, MeetingRequest request){
+  public boolean isEventBlockingRequest(Event event, MeetingRequest request, Boolean mandatory) {
+    
     Set<String> eventAttendees = new HashSet<>(event.getAttendees());
-
-    //find intersection between these two sets
-    eventAttendees.retainAll(request.getAttendees());
+    
+    if (mandatory) {
+      eventAttendees.retainAll(request.getAttendees());
+    } else {
+      eventAttendees.retainAll(request.getOptionalAttendees());
+    }
 
     return eventAttendees.isEmpty();
   }
